@@ -1,285 +1,225 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalles del Procesamiento - Sistema de Análisis</title>
-    <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0;
-            padding: 20px;
-            background-color: #0b1d3a; /* Azul marino oscuro */
-            color: #ffffff; /* Texto en blanco */
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #1e3a5f; /* Fondo de la tarjeta en azul marino claro */
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        h1 {
-            color: #00bfff; /* Azul celeste */
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #95a5a6; /* Azul claro */
-            margin-bottom: 30px;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: #34495e; /* Azul oscuro */
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            border-left: 4px solid #00bfff; /* Azul celeste */
-        }
-        .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            color: #ffffff; /* Texto en blanco */
-            margin: 0;
-        }
-        .stat-label {
-            font-size: 1em;
-            color: #95a5a6; /* Azul claro */
-        }
-        .text-section {
-            margin-bottom: 30px;
-        }
-        .text-container {
-            background: #34495e; /* Azul oscuro */
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 10px;
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            color: #ffffff; /* Texto en blanco */
-        }
-        .text-title {
-            color: #00bfff; /* Azul celeste */
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .badge {
-            background: #e74c3c; /* Rojo */
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8em;
-        }
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            background: #00bfff; /* Azul celeste */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin: 10px 5px;
-            transition: background 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background: #0095dd; /* Azul marino claro */
-        }
-        .btn-secondary {
-            background: #95a5a6; /* Azul claro */
-        }
-        .btn-secondary:hover {
-            background: #7f8c8d; /* Gris claro */
-        }
-        .btn-success {
-            background: #27ae60; /* Verde */
-        }
-        .btn-success:hover {
-            background: #219a52; /* Verde más oscuro */
-        }
-        .btn-container {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        .highlight {
-            background: #fff3cd;
-            padding: 2px 4px;
-            border-radius: 3px;
-            color: #000; /* Texto negro para mayor contraste */
-        }
-        .palabras-lista {
-            line-height: 1.8;
-            margin: 15px 0;
-        }
-        .help-text {
-            font-size: 0.9em;
-            color: #95a5a6; /* Azul claro */
-            margin-top: 10px;
-            font-style: italic;
-        }
-        .acento-demo {
-            background: #1e3a5f; /* Azul marino claro */
-            padding: 15px;
-            border-radius: 5px;
-            margin: 10px 0;
-            color: #ffffff; /* Texto en blanco */
-        }
-        .acento-ejemplo {
-            display: flex;
-            justify-content: space-around;
-            margin: 10px 0;
-        }
-        .ejemplo-item {
-            text-align: center;
-            padding: 10px;
-        }
-        .ejemplo-original {
-            color: #e74c3c; /* Rojo */
-            font-weight: bold;
-        }
-        .ejemplo-procesado {
-            color: #27ae60; /* Verde */
-            font-weight: bold;
-        }
-        .formula {
-            font-family: 'Cambria Math', serif;
-            text-align: center;
-            margin: 15px 0;
-            padding: 10px;
-            background-color: #1e3a5f; /* Azul marino claro */
-            border-radius: 5px;
-            color: #ffffff; /* Texto en blanco */
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detalles del Procesamiento - Sistema de Análisis</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #0b1d3a;
+    --card: #1c2b4a;
+    --card-light: #253858;
+    --accent: #00bfff;
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --text-light: #95a5a6;
+    --text-white: #ffffff;
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: var(--bg);
+    color: var(--text-white);
+}
+
+.container {
+    max-width: 1300px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+h1, h2 {
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Tarjetas de estadísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--card);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    text-align: center;
+    transition: transform 0.3s;
+}
+.stat-card:hover { transform: translateY(-5px); }
+.stat-number { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+.stat-label { color: var(--text-light); font-weight: 500; }
+
+/* Secciones colapsables */
+.text-section {
+    background: var(--card-light);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+}
+
+.text-section h2 {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.text-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    margin-top: 1rem;
+    white-space: pre-wrap;
+}
+
+.text-section.open .text-content {
+    max-height: 500px; /* ajustar según contenido */
+}
+
+/* Chips para palabras acentuadas */
+.accent-chip {
+    display: inline-block;
+    background: var(--success);
+    color: var(--text-white);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    margin: 0.2rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Fórmulas */
+.formula {
+    background: var(--card);
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+    text-align: center;
+    font-family: 'Cambria Math', serif;
+}
+
+/* Botones */
+.btn-group {
+    text-align: center;
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #0095dd; }
+.btn-success { background: var(--success); color: #fff; }
+.btn-success:hover { background: #1e8449; }
+.btn-secondary { background: var(--text-light); color: #000; }
+.btn-secondary:hover { background: #7f8c8d; color: #fff; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>🔍 Detalles del Procesamiento</h1>
-        <div class="subtitle">{{ texto.titulo }}</div>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">{{ total_palabras_original }}</div>
-                <div class="stat-label">Palabras originales</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ total_palabras_limpias }}</div>
-                <div class="stat-label">Palabras después de limpieza</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ stopwords_eliminadas }}</div>
-                <div class="stat-label">Stopwords eliminadas</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ simbolos_eliminados|length|default:"0" }}</div>
-                <div class="stat-label">Símbolos eliminados</div>
-            </div>
-        </div>
-        
-        <div class="text-section">
-            <div class="text-title">
-                <h2>📄 Texto Original</h2>
-                <span class="badge">Sin procesar</span>
-            </div>
-            <div class="text-container">
-                <pre>{{ texto_original }}</pre>
-            </div>
-        </div>
-        
-        <div class="text-section">
-            <div class="text-title">
-                <h2>✨ Texto Procesado</h2>
-                <span class="badge" style="background: #27ae60;">Procesado</span>
-            </div>
-            <div class="text-container">
-                <p>{{ texto_procesado }}</p>
-            </div>
-        </div>
-        
-        {% if simbolos_eliminados %}
-        <div class="text-section">
-            <h2>🔣 Símbolos Eliminados</h2>
-            <div class="text-container">
-                <p>Se eliminaron los siguientes símbolos de puntuación: <span class="highlight">{{ simbolos_eliminados }}</span></p>
-            </div>
-        </div>
-        {% endif %}
-       
-        {% if palabras_con_acentos %}
-        <div class="text-section">
-            <h2>🔤 Palabras con Acentos Preservados</h2>
-            <div class="text-container">
-                <p>Se detectaron y preservaron <strong>{{ palabras_con_acentos|length }}</strong> palabras con acentos:</p>
-                <div class="palabras-lista">
-                    {% for palabra in palabras_con_acentos %}
-                    <span class="highlight">{{ palabra }}</span>{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                    {% if palabras_con_acentos|length > 20 %}...{% endif %}
-                </div>
-                <p class="help-text">El sistema preserva correctamente las letras acentuadas (á, é, í, ó, ú) y caracteres especiales del español (ñ, ü).</p>
-            </div>
-        </div>
-        {% endif %}
-        
-        <div class="btn-container">
-            <a href="{% url 'analizar_texto' texto.id %}" class="btn btn-success">📊 Ver Resultados del Análisis</a>
-            <a href="{% url 'lista_textos' %}" class="btn btn-secondary">← Volver a la Lista</a>
-        </div>
+<div class="container">
+    <h1>🔍 Detalles del Procesamiento</h1>
+    <div class="subtitle">{{ texto.titulo }}</div>
 
-        <!-- sección para explicar la notación general -->
-        <div class="text-section">
-            <h2>🔢 Notación General de N-gramas y Probabilidades</h2>
-            <div class="text-container">
-                <div class="acento-demo">
-                    <h4>Notación para secuencias de palabras:</h4>
-                    <p class="formula">w_i^j = (w_i, w_{i+1}, ..., w_j)</p>
-                    <p>Ejemplo: <span class="highlight">w_2^6 = (w_2, w_3, w_4, w_5, w_6)</span></p>
-                </div>
-                
-                <div class="modelo-explicacion">
-                    <h4>🧮 Modelo General de N-gramas</h4>
-                    <p>Para un n-grama de orden n, la probabilidad condicional es:</p>
-                    <p class="formula">P(w_i|w_{i-n+1}^{i-1}) = C(w_{i-n+1}^{i}) / C(w_{i-n+1}^{i-1})</p>
-                    
-                    <p>Para calcular la probabilidad de una secuencia completa:</p>
-                    <p class="formula">P(w_1^m) ≈ ∏_{i=1}^m P(w_i|w_{i-n+1}^{i-1})</p>
-                    
-                    <div class="acento-ejemplo">
-                        {% for n in 2|make_list|slice:":5" %}
-                        <div class="ejemplo-item">
-                            <h4>Modelo de {{ forloop.counter|add:1 }}-gramas:</h4>
-                            <p class="formula">P(w_i|w_{i-{{ forloop.counter }}}^{i-1})</p>
-                            <p>Contexto: {{ forloop.counter }} palabra(s) anterior(es)</p>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                
-                <div class="info-box">
-                    <h4>📈 Aplicaciones de Modelos de N-gramas</h4>
-                    <p>Los modelos de n-gramas se utilizan en:</p>
-                    <ul>
-                        <li><strong>Predictores de texto:</strong> Sugerir la siguiente palabra al escribir</li>
-                        <li><strong>Reconocimiento de voz:</strong> Mejorar la precisión del reconocimiento</li>
-                        <li><strong>Traducción automática:</strong> Evaluar la fluidez de las traducciones</li>
-                        <li><strong>Corrección gramatical:</strong> Detectar errores en textos</li>
-                        <li><strong>Generación de texto:</strong> Crear texto coherente automáticamente</li>
-                    </ul>
-                </div>
-            </div>
+    <!-- Estadísticas -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_palabras_original }}</div>
+            <div class="stat-label">Palabras originales</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_palabras_limpias }}</div>
+            <div class="stat-label">Palabras limpias</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stopwords_eliminadas }}</div>
+            <div class="stat-label">Stopwords eliminadas</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ simbolos_eliminados|length|default:"0" }}</div>
+            <div class="stat-label">Símbolos eliminados</div>
         </div>
     </div>
+
+    <!-- Texto Original -->
+    <div class="text-section" onclick="this.classList.toggle('open')">
+        <h2>📄 Texto Original <span class="badge" style="background: var(--danger)">Sin procesar</span></h2>
+        <div class="text-content"><pre>{{ texto_original }}</pre></div>
+    </div>
+
+    <!-- Texto Procesado -->
+    <div class="text-section" onclick="this.classList.toggle('open')">
+        <h2>✨ Texto Procesado <span class="badge" style="background: var(--success)">Procesado</span></h2>
+        <div class="text-content"><p>{{ texto_procesado }}</p></div>
+    </div>
+
+    <!-- Símbolos eliminados -->
+    {% if simbolos_eliminados %}
+    <div class="text-section" onclick="this.classList.toggle('open')">
+        <h2>🔣 Símbolos Eliminados</h2>
+        <div class="text-content">
+            <p>Se eliminaron: <span class="accent-chip">{{ simbolos_eliminados }}</span></p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Palabras con acentos -->
+    {% if palabras_con_acentos %}
+    <div class="text-section" onclick="this.classList.toggle('open')">
+        <h2>🔤 Palabras con Acentos Preservados</h2>
+        <div class="text-content">
+            {% for palabra in palabras_con_acentos %}
+            <span class="accent-chip">{{ palabra }}</span>
+            {% endfor %}
+            {% if palabras_con_acentos|length > 20 %}...{% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Fórmulas -->
+    <div class="text-section" onclick="this.classList.toggle('open')">
+        <h2>🔢 Notación y Fórmulas de N-gramas</h2>
+        <div class="text-content">
+            <p class="formula">P(w_i|w_{i-n+1}^{i-1}) = C(w_{i-n+1}^{i}) / C(w_{i-n+1}^{i-1})</p>
+            <p class="formula">P(w_1^m) ≈ ∏_{i=1}^m P(w_i|w_{i-n+1}^{i-1})</p>
+        </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="btn-group">
+        <a href="{% url 'analizar_texto' texto.id %}" class="btn btn-success">📊 Ver Análisis</a>
+        <a href="{% url 'lista_textos' %}" class="btn btn-secondary">← Volver a la Lista</a>
+    </div>
+</div>
+
+<script>
+// Toggle secciones colapsables
+document.querySelectorAll('.text-section').forEach(section => {
+    section.addEventListener('click', () => {
+        section.classList.toggle('open');
+    });
+});
+</script>
 </body>
 </html>

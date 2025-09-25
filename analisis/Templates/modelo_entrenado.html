@@ -1,218 +1,268 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modelo Entrenado - Sistema de Análisis</title>
-    <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0;
-            padding: 20px;
-            background-color: #0b1d3a; /* Azul marino oscuro */
-            color: #ffffff; /* Texto en blanco */
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #1e3a5f; /* Fondo de la tarjeta en azul marino claro */
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        h1 {
-            color: #00bfff; /* Azul celeste */
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #95a5a6; /* Azul claro */
-            margin-bottom: 30px;
-        }
-        .stats-card {
-            background: #34495e; /* Azul oscuro */
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .stats-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin: 0;
-        }
-        .stats-label {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #34495e; /* Azul oscuro */
-            color: white;
-            position: sticky;
-            top: 0;
-        }
-        tr:nth-child(even) {
-            background-color: #1e3a5f; /* Azul marino claro */
-        }
-        tr:hover {
-            background-color: #007bbd; /* Azul marino más claro */
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #00bfff; /* Azul celeste */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin: 10px 5px;
-        }
-        .btn:hover {
-            background: #0095dd; /* Azul marino claro */
-        }
-        .info-box {
-            background-color: #1e3a5f; /* Azul marino claro */
-            border-left: 4px solid #00bfff; /* Azul celeste */
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            color: #ffffff; /* Texto en blanco */
-        }
-        .modelo-config {
-            background: #11254d; /* Azul marino */
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #95a5a6; /* Azul claro */
-        }
-        .formula {
-            font-family: 'Cambria Math', serif;
-            text-align: center;
-            margin: 15px 0;
-            padding: 10px;
-            background-color: #1e3a5f; /* Azul marino claro */
-            border-radius: 5px;
-            color: #ffffff; /* Texto en blanco */
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo {{ n_grama }}-gramas</title>
+<style>
+    /* ==== PALETA (colores idénticos al original) ==== */
+    :root {
+        --azul-fondo: #0b1d3a;
+        --azul-card: #1e3a5f;
+        --azul-oscuro: #34495e;
+        --azul-celeste: #00bfff;
+        --azul-claro: #95a5a6;
+        --azul-hover: #007bbd;
+        --rojo-alerta: #e74c3c;
+    }
+
+    /* ==== RESET & BASE ==== */
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background: var(--azul-fondo);
+        color: #fff;
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* ==== SIDEBAR ==== */
+    aside {
+        width: 260px;
+        background: var(--azul-card);
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: fixed;
+        top: 0; bottom: 0;
+        box-shadow: 4px 0 10px rgba(0,0,0,0.4);
+    }
+    aside h1 {
+        font-size: 1.6rem;
+        text-align: center;
+        color: var(--azul-celeste);
+        margin-bottom: 2rem;
+    }
+    aside nav a {
+        display: block;
+        padding: .75rem 1rem;
+        margin: .25rem 0;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background .3s;
+    }
+    aside nav a:hover {
+        background: var(--azul-hover);
+    }
+
+    /* ==== MAIN ==== */
+    main {
+        margin-left: 260px;
+        padding: 2rem;
+        width: 100%;
+    }
+    .header-section {
+        margin-bottom: 2rem;
+    }
+    .header-section h2 {
+        color: var(--azul-celeste);
+        font-size: 2rem;
+        margin-bottom: .5rem;
+    }
+    .subtitle {
+        color: var(--azul-claro);
+        font-weight: 300;
+    }
+
+    /* ==== GRID DE CARDS ==== */
+    .grid {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        margin-bottom: 2.5rem;
+    }
+    .card {
+        background: var(--azul-card);
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    }
+    .card h3 {
+        color: var(--azul-celeste);
+        margin-bottom: 1rem;
+    }
+
+    .stat-number {
+        font-size: 2.8rem;
+        font-weight: bold;
+        text-align: center;
+        margin-top: .5rem;
+    }
+
+    /* ==== TABLA ==== */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: .95rem;
+    }
+    th, td {
+        padding: .75rem;
+        border-bottom: 1px solid #222;
+    }
+    th {
+        background: var(--azul-oscuro);
+        text-align: left;
+        color: #fff;
+    }
+    tr:nth-child(even) {background: var(--azul-card);}
+    tr:hover {background: var(--azul-hover);}
+
+    /* ==== BOTONES ==== */
+    .actions {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    .btn {
+        background: var(--azul-celeste);
+        color: #fff;
+        padding: .75rem 1.25rem;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: background .3s;
+        font-weight: 500;
+    }
+    .btn:hover {background: #0095dd;}
+
+    /* ==== INFO BOX ==== */
+    .info {
+        border-left: 4px solid var(--azul-celeste);
+        background: var(--azul-card);
+        padding: 1rem 1.5rem;
+        border-radius: 6px;
+        margin-top: 2rem;
+        line-height: 1.6;
+    }
+
+    /* ==== FORMULA ==== */
+    .formula {
+        background: var(--azul-card);
+        border-radius: 6px;
+        padding: 1rem;
+        margin: 2rem 0;
+        font-family: 'Cambria Math', serif;
+        text-align: center;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--azul-claro);
+    }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎯 Modelo de {{ n_grama }}-gramas Entrenado</h1>
-        <div class="subtitle">{{ texto.titulo }}</div>
-        
-        <div class="modelo-config">
-            <h3>⚙️ Configuración del Modelo</h3>
+<aside>
+    <div>
+        <h1>Modelo {{ n_grama }}-gramas</h1>
+        <nav>
+            <a href="{% url 'autocompletado' %}">🤖 Probar Autocompletado</a>
+            <a href="{% url 'entrenar_modelo' %}">🔄 Nuevo Entrenamiento</a>
+            <a href="{% url 'lista_textos' %}">← Lista de Textos</a>
+        </nav>
+    </div>
+    <small style="color:var(--azul-claro);text-align:center;">Sistema de Análisis</small>
+</aside>
+
+<main>
+    <section class="header-section">
+        <h2>Configuración del Modelo</h2>
+        <p class="subtitle">{{ texto.titulo }}</p>
+    </section>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Parámetros</h3>
             <p><strong>Corpus:</strong> {{ texto.titulo }}</p>
-            <p><strong>Orden del n-grama:</strong> {{ n_grama }}-gramas</p>
+            <p><strong>Orden:</strong> {{ n_grama }}-gramas</p>
             <p><strong>Fronteras de oración:</strong> {% if usar_fronteras %}Sí{% else %}No{% endif %}</p>
-            <p><strong>Total de palabras procesadas:</strong> {{ palabras_limpias|length }}</p>
-            <p><strong>Total de {{ n_grama }}-gramas únicos:</strong> {{ total_ngramas }}</p>
+            <p><strong>Total palabras:</strong> {{ palabras_limpias|length }}</p>
+            <p><strong>{{ n_grama }}-gramas únicos:</strong> {{ total_ngramas }}</p>
             {% if palabras_limpias|length < n_grama %}
-            <p style="color: #e74c3c;">
-                ⚠️ <strong>Advertencia:</strong> El texto es muy corto para {{ n_grama }}-gramas efectivos
+            <p style="color: var(--rojo-alerta);font-weight:bold;">
+                ⚠️ Texto demasiado corto para este orden
             </p>
             {% endif %}
         </div>
-        
-        <div class="stats-card">
-            <div class="stats-number">{{ total_ngramas }}</div>
-            <div class="stats-label">{{ n_grama }}-gramas únicos encontrados</div>
+
+        <div class="card">
+            <h3>Total de {{ n_grama }}-gramas</h3>
+            <div class="stat-number">{{ total_ngramas }}</div>
         </div>
-        
-        <div class="info-box">
-            <strong>📈 Estadísticas del Modelo:</strong><br>
-            • El modelo puede predecir palabras basándose en {{ n_grama|add:"-1" }} palabra(s) de contexto<br>
-            • Se calcularon probabilidades condicionales usando Maximum Likelihood Estimation (MLE)<br>
-            • Listo para usar en el sistema de autocompletado
+
+        <div class="card">
+            <h3>Detalles</h3>
+            <p>• Predice usando {{ n_grama|add:"-1" }} palabra(s) de contexto.</p>
+            <p>• Probabilidades por MLE.</p>
+            <p>• Listo para autocompletado.</p>
         </div>
-        
-        <div class="formula">
-            Fórmula aplicada: 
-            P(w<sub>i</sub>|w<sub>i-{{ n_grama|add:"-1" }}</sub><sup>i-1</sup>) = 
-            C(w<sub>i-{{ n_grama|add:"-1" }}</sub><sup>i</sup>) / C(w<sub>i-{{ n_grama|add:"-1" }}</sub><sup>i-1</sup>)
-        </div>
-        
-        <h2>📊 Top 20 {{ n_grama }}-gramas por frecuencia</h2>
-        
-        {% if ngramas_probabilidades %}
-        <table>
-            <thead>
-                <tr>
-                    <th width="5%">#</th>
-                    <th width="35%">{{ n_grama }}-grama completo</th>
-                    <th width="25%">Contexto ({{ n_grama|add:"-1" }} palabras)</th>
-                    <th width="15%">Palabra objetivo</th>
-                    <th width="10%">Frecuencia</th>
-                    <th width="10%">Probabilidad</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ngrama, datos in ngramas_probabilidades %}
-                <tr>
-                    <td style="text-align: center; font-weight: bold;">{{ forloop.counter }}</td>
-                    <td><strong>{{ ngrama }}</strong></td>
-                    <td>{{ datos.contexto }}</td>
-                    <td>{{ datos.palabra_objetivo }}</td>
-                    <td>{{ datos.frecuencia_ngrama }}</td>
-                    <td>{{ datos.probabilidad|floatformat:4 }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        
-        <div style="margin-top: 20px; text-align: center;">
-            <small style="color: #95a5a6;">
-                Mostrando los 20 {{ n_grama }}-gramas más frecuentes de un total de {{ total_ngramas }}
-            </small>
-        </div>
-        {% else %}
-        <div class="empty-state">
-            <div style="font-size: 48px;">📝</div>
-            <h3>No se encontraron n-gramas</h3>
-            <p>El texto no tiene suficientes palabras para generar {{ n_grama }}-gramas.</p>
-            <p>Intenta con un texto más largo o un orden de n-grama menor.</p>
-        </div>
-        {% endif %}
-        
-        <div style="text-align: center; margin-top: 40px;">
-            <a href="{% url 'autocompletado' %}" class="btn">🤖 Probar Autocompletado con este Modelo</a>
-            <a href="{% url 'entrenar_modelo' %}" class="btn">🔄 Entrenar otro modelo</a>
-            <a href="{% url 'lista_textos' %}" class="btn">← Volver a la lista</a>
-        </div>
-        
-        {% if ngramas_probabilidades %}
-        <div class="info-box" style="margin-top: 30px;">
-            <h3>💡 Ejemplos de uso del modelo</h3>
-            <p>Con este modelo de {{ n_grama }}-gramas, puedes predecir:</p>
-            <ul>
-                <li><strong>Contexto:</strong> Las últimas {{ n_grama|add:"-1" }} palabra(s) escritas</li>
-                <li><strong>Predicción:</strong> La palabra más probable que sigue</li>
-            </ul>
-            
-            <div style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">
-                <h4>Ejemplo práctico:</h4>
-                <p>Si escribes: <code>"{{ ngramas_probabilidades.0.1.contexto }}"</code></p>
-                <p>El modelo sugerirá: <strong>"{{ ngramas_probabilidades.0.1.palabra_objetivo }}"</strong></p>
-                <p>Con una probabilidad de: <strong>{{ ngramas_probabilidades.0.1.probabilidad|floatformat:4 }}</strong></p>
-            </div>
-        </div>
-        {% endif %}
     </div>
+
+    <div class="formula">
+        P(w<sub>i</sub>|w<sub>i-{{ n_grama|add:"-1" }}</sub><sup>i-1</sup>) =
+        C(w<sub>i-{{ n_grama|add:"-1" }}</sub><sup>i</sup>) /
+        C(w<sub>i-{{ n_grama|add:"-1" }}</sub><sup>i-1</sup>)
+    </div>
+
+    <h2>Top 20 {{ n_grama }}-gramas por frecuencia</h2>
+
+    {% if ngramas_probabilidades %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{{ n_grama }}-grama completo</th>
+                <th>Contexto</th>
+                <th>Objetivo</th>
+                <th>Frecuencia</th>
+                <th>Probabilidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ngrama, datos in ngramas_probabilidades %}
+            <tr>
+                <td style="text-align:center;font-weight:bold;">{{ forloop.counter }}</td>
+                <td><strong>{{ ngrama }}</strong></td>
+                <td>{{ datos.contexto }}</td>
+                <td>{{ datos.palabra_objetivo }}</td>
+                <td>{{ datos.frecuencia_ngrama }}</td>
+                <td>{{ datos.probabilidad|floatformat:4 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p style="color:var(--azul-claro);margin-top:.5rem;">
+        Mostrando los 20 más frecuentes de {{ total_ngramas }} totales.
+    </p>
+    {% else %}
+    <div class="empty">
+        <h3>📝 No se encontraron n-gramas</h3>
+        <p>El texto no tiene suficientes palabras para generar {{ n_grama }}-gramas.</p>
+    </div>
+    {% endif %}
+
+    {% if ngramas_probabilidades %}
+    <div class="info">
+        <h3>Ejemplo de Predicción</h3>
+        <p>Si escribes: <code>{{ ngramas_probabilidades.0.1.contexto }}</code></p>
+        <p>Sugerencia: <strong>{{ ngramas_probabilidades.0.1.palabra_objetivo }}</strong></p>
+        <p>Probabilidad: <strong>{{ ngramas_probabilidades.0.1.probabilidad|floatformat:4 }}</strong></p>
+    </div>
+    {% endif %}
+</main>
 </body>
 </html>
