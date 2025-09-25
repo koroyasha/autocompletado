@@ -1,0 +1,36 @@
+El lenguaje es una de las herramientas centrales en nuestra vida social y profesional. Entre otras cosas, actúa como un medio para transmitir ideas, información, opiniones y sentimientos; así como para persuadir, pedir información, o dar ordenes. Asimismo, el lenguaje humano es algo que esta en constante cambio y evolución; y que puede llegar a ser muy ambiguo y variable. Tomemos por ejemplo la frase "comí una pizza con amigos" comparada con "comí una pizza con aceitunas"; su estructura es la misma, pero su significado es totalmente distinto. De la misma manera, un mismo mensaje puede ser expresado de formas diferentes; "comí una pizza con amigos" puede también ser expresado como "compartí una pizza con amigos".
+
+Los seres humanos somos muy buenos a la hora de producir e interpretar el lenguaje, podemos expresar, percibir e interpretar significados muy elaborados en fracción de segundos casi sin dificultades; pero al mismo tiempo, somos también muy malos a la hora de entender y describir formalmente las reglas que lo gobiernan. Por este motivo, entender y producir el lenguaje por medio de una computadora es un problema muy difícil de resolver. Éste problema, es el campo de estudio de lo que en inteligencia artificial se conoce como Procesamiento del Lenguaje Natural o NLP por sus siglas en inglés.
+
+¿Qué es el Procesamiento del Lenguaje Natural?
+El Procesamiento del Lenguaje Natural o NLP es una disciplina que se encuentra en la intersección de varias ciencias, tales como las Ciencias de la Computación, la inteligencia artificial y Psicología Cognitiva. Su idea central es la de darle a las máquinas la capacidad de leer y comprender los idiomas que hablamos los humanos. La investigación del Procesamiento del Lenguaje Natural tiene como objetivo responder a la pregunta de cómo las personas son capaces de comprender el significado de una oración oral / escrita y cómo las personas entienden lo que sucedió, cuándo y dónde sucedió; y las diferencias entre una suposición, una creencia o un hecho.
+
+Los elementos comunes de cualquier arquitectura estándar de un sistema para el Procesamiento del Lenguaje Natural son:
+
+Reconocimiento de voz: Convertir una palabra hablada en un conjunto de palabras. Las palabras habladas se componen de una serie de parámetros relacionados con el sentido de la audición.
+
+Comprensión del lenguaje: El objetivo de este elemento es generar un significado para las palabras habladas, y ese significado será utilizado por el siguiente elemento (gestión del diálogo).
+
+Gestión del diálogo: La tarea principal de este elemento es coordinar y mantener unidas todas las partes del sistema y los usuarios, y conectarse con otros sistemas.
+
+Comunicación con sistemas externos: como sistemas expertos, sistemas de bases de datos u otras aplicaciones informáticas.
+
+Generación de respuesta: Establecer el mensaje que el sistema debe entregar.
+
+Salida de voz: Uso de diferentes técnicas para producir el mensaje desde el sistema.
+
+En general, en Procesamiento del Lenguaje Natural se utilizan seis niveles de comprensión con el objetivo de descubrir el significado del discurso. Estos niveles son:
+
+Nivel fonético: Aquí se presta atención a la fonética, la forma en que las palabras son pronunciadas. Este nivel es importante cuando procesamos la palabra hablada, no así cuando trabajamos con texto escrito.
+
+Nivel morfológico: Aquí nos interesa realizar un análisis morfológico del discurso; estudiar la estructura de las palabras para delimitarlas y clasificarlas.
+
+Nivel sintáctico: Aquí se realiza un análisis de sintaxis, el cual incluye la acción de dividir una oración en cada uno de sus componentes.
+
+Nivel semántico: Este nivel es un complemente del anterior, en el análisis semántico se busca entender el significado de la oración. Las palabras pueden tener múltiples significados, la idea es identificar el significado apropiado por medio del contexto de la oración.
+
+Nivel discursivo: El nivel discursivo examina el significado de la oración en relación a otra oración en el texto o párrafo del mismo documento.
+
+Nivel pragmático: Este nivel se ocupa del análisis de oraciones y cómo se usan en diferentes situaciones. Además, también cómo su significado cambia dependiendo de la situación.
+
+Todos los niveles descritos aquí son inseparables y se complementan entre sí. El objetivo de los sistemas de NLP es incluir estas definiciones en una computadora y luego usarlas para crear una oración estructurada y sin ambigüedades con un significado bien definido.

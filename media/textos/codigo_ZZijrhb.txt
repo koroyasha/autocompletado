@@ -1,0 +1,325 @@
+import tkinter as tk
+from tkinter import ttk, messagebox, simpledialog
+
+class GeneticAlgorithmApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Algoritmo Genético con Cruce Binario")
+        self.root.geometry("1200x800")
+        
+        # Parámetros fijos
+        self.xmin = 2
+        self.xmax = 12
+        self.L = 11
+        
+        # Datos
+        self.parents = []
+        self.crossovers = []  # Ahora almacenamos cada cruce como un objeto
+        self.current_crossover_number = 1
+        
+        # Crear la interfaz
+        self.create_widgets()
+        
+    def create_widgets(self):
+        # Frame de entrada
+        input_frame = tk.LabelFrame(self.root, text="Ingresar Individuos", padx=10, pady=10)
+        input_frame.pack(fill=tk.X, padx=10, pady=5)
+        
+        tk.Label(input_frame, text="Binario (11 bits):").grid(row=0, column=0, sticky=tk.W)
+        self.binary_entry = tk.Entry(input_frame, width=30)
+        self.binary_entry.grid(row=0, column=1, padx=5)
+        
+        add_btn = tk.Button(input_frame, text="Agregar", command=self.add_parent)
+        add_btn.grid(row=0, column=2, padx=5)
+        
+        clear_btn = tk.Button(input_frame, text="Limpiar Todo", command=self.clear_all)
+        clear_btn.grid(row=0, column=3, padx=5)
+        
+        # Frame de operaciones genéticas
+        genetic_frame = tk.LabelFrame(self.root, text="Operaciones Genéticas", padx=10, pady=10)
+        genetic_frame.pack(fill=tk.X, padx=10, pady=5)
+        
+        crossover_btn = tk.Button(genetic_frame, text="Realizar Cruce", command=self.perform_crossover)
+        crossover_btn.pack(side=tk.LEFT, padx=5)
+        
+        # Frame de resultados
+        result_frame = tk.LabelFrame(self.root, text="Resultados", padx=10, pady=10)
+        result_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+        
+        # Notebook para múltiples pestañas
+        self.notebook = ttk.Notebook(result_frame)
+        self.notebook.pack(fill=tk.BOTH, expand=True)
+        
+        # Pestaña de padres
+        self.parent_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.parent_tab, text="Padres")
+        self.create_parent_table()
+        
+        # Pestaña de cruces
+        self.crossover_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.crossover_tab, text="Cruces")
+        self.create_crossover_table()
+        
+        # Información
+        info_label = tk.Label(self.root, 
+                            text=f"Parámetros: xmin={self.xmin}, xmax={self.xmax}, L={self.L} | Función: x² + 2x + 5",
+                            fg="gray")
+        info_label.pack(side=tk.BOTTOM, pady=5)
+    
+    def create_parent_table(self):
+        # Crear tabla para padres
+        frame = tk.Frame(self.parent_tab)
+        frame.pack(fill=tk.BOTH, expand=True)
+        
+        scroll_y = tk.Scrollbar(frame, orient=tk.VERTICAL)
+        scroll_y.pack(side=tk.RIGHT, fill=tk.Y)
+        
+        columns = ("#", "Binario", "Decimal", "Real", "Adaptado")
+        self.parent_table = ttk.Treeview(frame, columns=columns, yscrollcommand=scroll_y.set)
+        
+        for col in columns:
+            self.parent_table.heading(col, text=col)
+            self.parent_table.column(col, width=150, anchor=tk.CENTER)
+        
+        self.parent_table.column("#", width=50)
+        self.parent_table.pack(fill=tk.BOTH, expand=True)
+        
+        scroll_y.config(command=self.parent_table.yview)
+    
+    def create_crossover_table(self):
+        # Crear tabla para cruces con más detalles
+        frame = tk.Frame(self.crossover_tab)
+        frame.pack(fill=tk.BOTH, expand=True)
+        
+        scroll_y = tk.Scrollbar(frame, orient=tk.VERTICAL)
+        scroll_y.pack(side=tk.RIGHT, fill=tk.Y)
+        
+        columns = (
+            "Cruce #", "Tipo", "Individuo", "Binario", 
+            "Decimal", "Real", "Adaptado", "Padres", "Punto Corte"
+        )
+        self.crossover_table = ttk.Treeview(frame, columns=columns, yscrollcommand=scroll_y.set)
+        
+        # Configurar columnas
+        col_widths = {
+            "Cruce #": 60, "Tipo": 80, "Individuo": 80, 
+            "Binario": 120, "Decimal": 80, "Real": 100, 
+            "Adaptado": 100, "Padres": 80, "Punto Corte": 80
+        }
+        
+        for col in columns:
+            self.crossover_table.heading(col, text=col)
+            self.crossover_table.column(col, width=col_widths.get(col, 100), anchor=tk.CENTER)
+        
+        self.crossover_table.pack(fill=tk.BOTH, expand=True)
+        scroll_y.config(command=self.crossover_table.yview)
+    
+    def add_parent(self):
+        binary = self.binary_entry.get().strip()
+        
+        if not binary:
+            messagebox.showerror("Error", "Por favor ingrese un número binario")
+            return
+        
+        if len(binary) != self.L:
+            messagebox.showerror("Error", f"El número binario debe tener exactamente {self.L} bits")
+            return
+        
+        if not all(bit in '01' for bit in binary):
+            messagebox.showerror("Error", "El número binario solo puede contener 0s y 1s")
+            return
+        
+        decimal = int(binary, 2)
+        real = self.decimal_to_real(decimal)
+        adapted = self.real_to_adapted(real)
+        
+        self.parents.append({
+            'id': len(self.parents) + 1,
+            'binary': binary,
+            'decimal': decimal,
+            'real': real,
+            'adapted': adapted
+        })
+        
+        self.update_parent_table()
+        self.binary_entry.delete(0, tk.END)
+    
+    def decimal_to_real(self, decimal):
+        return self.xmin + decimal * ((self.xmax - self.xmin) / (2**self.L - 1))
+    
+    def real_to_adapted(self, real):
+        return real**2 + 2*real + 5
+    
+    def update_parent_table(self):
+        self.clear_table(self.parent_table)
+        
+        for parent in self.parents:
+            self.parent_table.insert("", tk.END, values=(
+                parent['id'],
+                parent['binary'],
+                parent['decimal'],
+                f"{parent['real']:.6f}",
+                f"{parent['adapted']:.6f}"
+            ))
+    
+    def update_crossover_table(self):
+        self.clear_table(self.crossover_table)
+        
+        for crossover in self.crossovers:
+            # Insertar padres primero
+            self.crossover_table.insert("", tk.END, values=(
+                crossover['number'],
+                "Padre",
+                f"P{crossover['parent1']['id']}",
+                crossover['parent1']['binary'],
+                crossover['parent1']['decimal'],
+                f"{crossover['parent1']['real']:.6f}",
+                f"{crossover['parent1']['adapted']:.6f}",
+                "",
+                ""
+            ))
+            
+            self.crossover_table.insert("", tk.END, values=(
+                crossover['number'],
+                "Padre",
+                f"P{crossover['parent2']['id']}",
+                crossover['parent2']['binary'],
+                crossover['parent2']['decimal'],
+                f"{crossover['parent2']['real']:.6f}",
+                f"{crossover['parent2']['adapted']:.6f}",
+                "",
+                ""
+            ))
+            
+            # Línea separadora
+            self.crossover_table.insert("", tk.END, values=(
+                crossover['number'],
+                "---",
+                "---",
+                "---",
+                "---",
+                "---",
+                "---",
+                "---",
+                f"{crossover['point']}"
+            ))
+            
+            # Insertar hijos
+            self.crossover_table.insert("", tk.END, values=(
+                crossover['number'],
+                "Hijo",
+                f"H{crossover['number']}A",
+                crossover['child1']['binary'],
+                crossover['child1']['decimal'],
+                f"{crossover['child1']['real']:.6f}",
+                f"{crossover['child1']['adapted']:.6f}",
+                f"P{crossover['parent1']['id']}-P{crossover['parent2']['id']}",
+                f"{crossover['point']}"
+            ))
+            
+            self.crossover_table.insert("", tk.END, values=(
+                crossover['number'],
+                "Hijo",
+                f"H{crossover['number']}B",
+                crossover['child2']['binary'],
+                crossover['child2']['decimal'],
+                f"{crossover['child2']['real']:.6f}",
+                f"{crossover['child2']['adapted']:.6f}",
+                f"P{crossover['parent1']['id']}-P{crossover['parent2']['id']}",
+                f"{crossover['point']}"
+            ))
+            
+            # Línea separadora entre cruces
+            self.crossover_table.insert("", tk.END, values=(
+                "", "", "", "", "", "", "", "", ""
+            ))
+    
+    def clear_table(self, table):
+        for row in table.get_children():
+            table.delete(row)
+    
+    def clear_all(self):
+        self.parents = []
+        self.crossovers = []
+        self.current_crossover_number = 1
+        self.update_parent_table()
+        self.update_crossover_table()
+    
+    def perform_crossover(self):
+        if len(self.parents) < 2:
+            messagebox.showerror("Error", "Necesita al menos 2 padres para realizar un cruce")
+            return
+        
+        # Pedir número de cruces
+        num_crossovers = simpledialog.askinteger("Número de Cruces", 
+                                               "¿Cuántos cruces desea realizar?", 
+                                               parent=self.root,
+                                               minvalue=1, maxvalue=10)
+        if not num_crossovers:
+            return
+        
+        for _ in range(num_crossovers):
+            # Seleccionar padres
+            parent1_idx = simpledialog.askinteger(f"Cruce {self.current_crossover_number}", 
+                                                "Ingrese el número del Padre 1:", 
+                                                parent=self.root,
+                                                minvalue=1, maxvalue=len(self.parents))
+            if parent1_idx is None:
+                return
+            
+            parent2_idx = simpledialog.askinteger(f"Cruce {self.current_crossover_number}", 
+                                                "Ingrese el número del Padre 2:", 
+                                                parent=self.root,
+                                                minvalue=1, maxvalue=len(self.parents))
+            if parent2_idx is None:
+                return
+            
+            parent1 = self.parents[parent1_idx-1]
+            parent2 = self.parents[parent2_idx-1]
+            
+            # Pedir punto de corte
+            crossover_point = simpledialog.askinteger(f"Cruce {self.current_crossover_number}", 
+                                                    "Ingrese el punto de corte (1-10):", 
+                                                    parent=self.root,
+                                                    minvalue=1, maxvalue=10)
+            if crossover_point is None:
+                return
+            
+            # Realizar cruce
+            child1_binary = parent2['binary'][:self.L-crossover_point] + parent1['binary'][self.L-crossover_point:]
+            child2_binary = parent1['binary'][:self.L-crossover_point] + parent2['binary'][self.L-crossover_point:]
+            
+            # Procesar hijos
+            def process_child(binary):
+                decimal = int(binary, 2)
+                real = self.decimal_to_real(decimal)
+                adapted = self.real_to_adapted(real)
+                return {
+                    'binary': binary,
+                    'decimal': decimal,
+                    'real': real,
+                    'adapted': adapted
+                }
+            
+            child1 = process_child(child1_binary)
+            child2 = process_child(child2_binary)
+            
+            # Almacenar el cruce completo
+            self.crossovers.append({
+                'number': self.current_crossover_number,
+                'parent1': parent1,
+                'parent2': parent2,
+                'point': crossover_point,
+                'child1': child1,
+                'child2': child2
+            })
+            
+            self.current_crossover_number += 1
+        
+        self.update_crossover_table()
+        messagebox.showinfo("Éxito", f"Se realizaron {num_crossovers} cruces exitosamente")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = GeneticAlgorithmApp(root)
+    root.mainloop()

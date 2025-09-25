@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenar Modelo - Sistema de Análisis</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0;
+            padding: 20px;
+            background-color: #0b1d3a; /* Azul marino oscuro */
+            color: #ffffff; /* Texto en blanco */
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1e3a5f; /* Fondo de la tarjeta en azul marino claro */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            color: #00bfff; /* Azul celeste */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #00bfff; /* Azul celeste */
+        }
+        select, input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #0b1d3a; /* Azul marino oscuro */
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #1e3a5f; /* Azul marino claro */
+            color: #ffffff; /* Texto en blanco */
+        }
+        select:focus, input[type="number"]:focus {
+            border-color: #00bfff; /* Azul celeste */
+            outline: none;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+        button {
+            padding: 12px 25px;
+            background: #00bfff; /* Azul celeste */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background: #0095dd; /* Azul marino claro */
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #007bbd; /* Azul marino */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+        }
+        .btn-primary {
+            background: #00bfff; /* Azul celeste */
+        }
+        .btn-primary:hover {
+            background: #0095dd; /* Azul marino claro */
+        }
+        .info-box {
+            background: #1e3a5f; /* Azul marino claro */
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #00bfff; /* Azul celeste */
+            color: #ffffff; /* Texto en blanco */
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #0b1d3a; /* Azul marino oscuro */
+        }
+        .modelo-info {
+            background: #11254d; /* Fondo en azul marino */
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #ffffff; /* Texto en blanco */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Entrenar Modelo de N-gramas</h1>
+        
+        <div class="info-box">
+            <strong>🎯 Objetivo:</strong> Entrenar un modelo de n-gramas que será usado para el sistema de autocompletado. 
+            El modelo calculará las probabilidades condicionales de las palabras basándose en sus contextos.
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="texto_id">Seleccionar corpus para entrenar:</label>
+                <select name="texto_id" id="texto_id" required>
+                    <option value="">-- Selecciona un texto --</option>
+                    {% for texto in textos %}
+                    <option value="{{ texto.id }}">{{ texto.titulo }} (subido el {{ texto.fecha_subida|date:"d/m/Y" }})</option>
+                    {% endfor %}
+                </select>
+                <small style="color: #95a5a6;">Elige el texto que servirá como base para el modelo</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="n_grama">Orden del n-grama (n):</label>
+                <input type="number" name="n_grama" id="n_grama" 
+                    min="2" max="20" value="3" required>
+                <small style="color: #95a5a6;">
+                    Número de palabras en la secuencia. Mayor n captura más contexto pero requiere más datos.
+                </small>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" name="fronteras" id="fronteras" value="true">
+                <label for="fronteras" style="color: #00bfff;">Incluir fronteras de oración (&lt;s&gt;, &lt;/s&gt;)</label>
+            </div>
+            <small style="color: #95a5a6; display: block; margin-bottom: 15px;">
+                Las fronteras ayudan al modelo a entender los límites de las oraciones
+            </small>
+            
+            <div class="modelo-info">
+                <h4>🧠 Fórmula del Modelo</h4>
+                <p>Para un modelo de <span id="n-ejemplo">2</span>-gramas:</p>
+                <p style="text-align: center; font-family: 'Cambria Math', serif;">
+                    P(w<sub>i</sub>|w<sub>i-1</sub>) = C(w<sub>i-1</sub>, w<sub>i</sub>) / C(w<sub>i-1</sub>)
+                </p>
+                <p>Donde:</p>
+                <ul>
+                    <li><strong>P(w<sub>i</sub>|w<sub>i-1</sub>)</strong>: Probabilidad de la palabra w<sub>i</sub> dado w<sub>i-1</sub></li>
+                    <li><strong>C(w<sub>i-1</sub>, w<sub>i</sub>)</strong>: Frecuencia del bigrama</li>
+                    <li><strong>C(w<sub>i-1</sub>)</strong>: Frecuencia de la palabra anterior</li>
+                </ul>
+            </div>
+            
+            <button type="submit">🎯 Entrenar Modelo</button>
+        </form>
+        
+        <div class="btn-container">
+            <a href="{% url 'autocompletado' %}" class="btn btn-primary">🤖 Probar Autocompletado</a>
+            <a href="{% url 'lista_textos' %}" class="btn">← Volver a la lista</a>
+        </div>
+    </div>
+
+    <script>
+        // Actualizar la fórmula cuando cambie el n-grama
+        document.getElementById('n_grama').addEventListener('change', function() {
+            const n = parseInt(this.value);
+            const nEjemplo = document.getElementById('n-ejemplo');
+            const formula = document.querySelector('.modelo-info p:nth-child(2)');
+            
+            nEjemplo.textContent = n;
+            
+            if (n === 2) {
+                formula.innerHTML = 'P(w<sub>i</sub>|w<sub>i-1</sub>) = C(w<sub>i-1</sub>, w<sub>i</sub>) / C(w<sub>i-1</sub>)';
+            } else if (n === 3) {
+                formula.innerHTML = 'P(w<sub>i</sub>|w<sub>i-2</sub>, w<sub>i-1</sub>) = C(w<sub>i-2</sub>, w<sub>i-1</sub>, w<sub>i</sub>) / C(w<sub>i-2</sub>, w<sub>i-1</sub>)';
+            } else {
+                formula.innerHTML = `P(w<sub>i</sub>|w<sub>i-${n-1}</sub>, w<sub>i-2</sub>, ..., w<sub>i-${n-1}</sub>) = C(w<sub>i-${n-1}</sub>, ..., w<sub>i</sub>) / C(w<sub>i-${n-1}</sub>, ..., w<sub>i-1</sub>)`;
+            }
+        });
+        
+        // Seleccionar automáticamente el primer texto disponible
+        document.addEventListener('DOMContentLoaded', function() {
+            const select = document.getElementById('texto_id');
+            if (select.options.length > 1) {
+                select.selectedIndex = 1;
+            }
+        });
+    </script>
+</body>
+</html>
