@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalles del Procesamiento - Rediseño Moderno</title>
+    <title>Detalles del Procesamiento - Corregido</title>
     <style>
         /* --- Reset básico --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,6 +28,7 @@
             position: sticky;
             top: 0;
             height: 100vh;
+            overflow-y: auto; /* Para el caso de pantallas pequeñas */
         }
 
         .sidebar h2 {
@@ -54,6 +55,7 @@
         .main-content {
             flex: 1;
             padding: 30px 40px;
+            overflow-y: auto; /* Permite scroll si el contenido es muy largo */
         }
 
         h1 { text-align: center; color: #00bfff; margin-bottom: 15px; }
@@ -91,8 +93,15 @@
         }
         .tab-content.active { display: block; }
 
-        /* --- Texto --- */
-        pre, p { color: #a0c4ff; line-height: 1.6; }
+        /* --- Texto y LA CORRECCIÓN --- */
+        .tab-content pre {
+            white-space: pre-wrap;     /* Permite que el texto se ajuste y respete el contenedor */
+            word-wrap: break-word;     /* Fuerza el corte de palabras largas para evitar desbordamiento */
+            color: #a0c4ff;
+            line-height: 1.6;
+        }
+        
+        p { color: #a0c4ff; line-height: 1.6; }
 
         .highlight {
             background-color: #11254d;
@@ -156,10 +165,25 @@
             border-radius: 5px;
             margin: 10px 0;
         }
+        
+        /* --- MEJORA ESTÉTICA: Scrollbar personalizado --- */
+        .tab-content::-webkit-scrollbar, .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .tab-content::-webkit-scrollbar-track, .sidebar::-webkit-scrollbar-track {
+            background: #0d1a3d;
+        }
+        .tab-content::-webkit-scrollbar-thumb, .sidebar::-webkit-scrollbar-thumb {
+            background-color: #2c3e70;
+            border-radius: 4px;
+        }
+        .tab-content::-webkit-scrollbar-thumb:hover, .sidebar::-webkit-scrollbar-thumb:hover {
+            background-color: #00bfff;
+        }
+
     </style>
 </head>
 <body>
-    <!-- Panel lateral de estadísticas -->
     <div class="sidebar">
         <h2>📊 Estadísticas</h2>
         <div class="stat-card">
@@ -180,12 +204,10 @@
         </div>
     </div>
 
-    <!-- Contenedor principal -->
     <div class="main-content">
         <h1>🔍 Detalles del Procesamiento</h1>
         <div class="subtitle">{{ texto.titulo }}</div>
 
-        <!-- Pestañas -->
         <div class="tabs">
             <div class="tab active" data-tab="original">Texto Original</div>
             <div class="tab" data-tab="procesado">Texto Procesado</div>
@@ -193,7 +215,6 @@
             <div class="tab" data-tab="ngramas">N-gramas & Probabilidades</div>
         </div>
 
-        <!-- Contenidos de pestañas -->
         <div class="tab-content active" id="original">
             <pre>{{ texto_original }}</pre>
         </div>
@@ -237,14 +258,12 @@
             {% endif %}
         </div>
 
-        <!-- Botones de navegación -->
         <div class="btn-container">
             <a href="{% url 'analizar_texto' texto.id %}" class="btn btn-primary">📊 Ver Análisis</a>
             <a href="{% url 'lista_textos' %}" class="btn btn-secondary">← Volver a Lista</a>
         </div>
     </div>
 
-    <!-- Script de pestañas -->
     <script>
         const tabs = document.querySelectorAll('.tab');
         const contents = document.querySelectorAll('.tab-content');
