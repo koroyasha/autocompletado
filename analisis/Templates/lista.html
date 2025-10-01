@@ -1,202 +1,267 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Textos subidos - Sistema de Análisis</title>
-<style>
-    /* ====== Base ====== */
-    :root {
-        --bg-dark: #0b1d3a;
-        --bg-card: #1e3a5f;
-        --accent:  #00bfff;
-        --green:   #27ae60;
-        --green-dark: #219a52;
-        --purple:  #9b59b6;
-        --orange:  #e67e22;
-    }
-    body{
-        margin:0;
-        font-family: "Segoe UI", Tahoma, sans-serif;
-        background: var(--bg-dark);
-        color:#fff;
-        display:flex;
-        flex-direction:column;
-        min-height:100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Textos subidos - Estilo Azul Marino</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* ====== Encabezado ====== */
-    header{
-        background:var(--bg-card);
-        padding:20px;
-        text-align:center;
-        box-shadow:0 2px 8px rgba(0,0,0,.4);
-    }
-    header h1{
-        margin:0;
-        color:var(--accent);
-        font-size:2rem;
-        letter-spacing:1px;
-    }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0;
+            padding: 40px 20px;
+            background-color: #0b1d3a; /* Azul marino oscuro */
+            color: #f0f0f0;
+        }
 
-    /* ====== Zona de acciones ====== */
-    .actions{
-        display:flex;
-        flex-wrap:wrap;
-        justify-content:center;
-        gap:15px;
-        padding:20px;
-        background:#11254d;
-    }
-    .actions a{
-        text-decoration:none;
-        color:#fff;
-        padding:12px 24px;
-        border-radius:8px;
-        font-weight:bold;
-        transition:.3s;
-    }
-    .upload{background:var(--accent);}
-    .upload:hover{background:#0095dd;}
-    .auto {background:var(--purple);}
-    .auto:hover{background:#8041a8;}
-    .train{background:var(--orange);}
-    .train:hover{background:#c25f13;}
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #1a2a4f; /* Azul marino medio */
+            padding: 30px 40px;
+            border-radius: 12px;
+            border: 2px solid #2c3e70;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
 
-    /* ====== Tabla ====== */
-    .table-wrapper{
-        flex:1;
-        padding:30px;
-        max-width:1100px;
-        margin:0 auto;
-    }
-    table{
-        width:100%;
-        border-collapse:separate;
-        border-spacing:0 10px;
-    }
-    th{
-        background:#34495e;
-        text-align:left;
-        padding:12px 15px;
-    }
-    td{
-        background:var(--bg-card);
-        padding:15px;
-        border-radius:6px;
-    }
-    tr:hover td{
-        background:#2a4a72;
-    }
-    .btn-analyze{
-        background:var(--green);
-        color:#fff;
-        padding:8px 14px;
-        border-radius:5px;
-        text-decoration:none;
-        font-weight:600;
-        transition:.3s;
-        display:inline-block;
-    }
-    .btn-analyze:hover{background:var(--green-dark);}
-    .mini-links{
-        margin-top:8px;
-        display:flex;
-        flex-wrap:wrap;
-        gap:6px;
-    }
-    .mini-links a{
-        padding:4px 8px;
-        font-size:12px;
-        border-radius:4px;
-        border:1px solid rgba(255,255,255,.2);
-        text-decoration:none;
-        color:#fff;
-        background:rgba(255,255,255,.08);
-        transition:.3s;
-    }
-    .mini-links a:hover{
-        background:rgba(255,255,255,.2);
-    }
+        h1 {
+            color: #00bfff; /* Azul celeste */
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2c3e70;
+            padding-bottom: 15px;
+        }
 
-    /* ====== Estado vacío ====== */
-    .empty{
-        text-align:center;
-        margin-top:60px;
-        color:#7f8c8d;
-    }
-    .empty i{
-        font-size:50px;
-        display:block;
-        margin-bottom:10px;
-    }
+        /* --- Contenedor de funcionalidades --- */
+        .feature-container {
+            text-align: center;
+            margin: 40px 0 30px 0;
+            padding: 25px;
+            background-color: #11254d;
+            border-radius: 8px;
+            border: 1px solid #2c3e70;
+        }
+        .feature-container h2 {
+            color: #00bfff;
+            margin-bottom: 20px;
+        }
+        .feature-container .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .feature-container p {
+            color: #a0c4ff;
+        }
+        
+        /* --- Estilos de Botones --- */
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-primary {
+            color: #0b1d3a;
+            background-color: #00bfff;
+        }
+        .btn-primary:hover {
+            background-color: #0095dd;
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: #00bfff;
+            border-color: #00bfff;
+        }
+        .btn-secondary:hover {
+            background-color: #0f2460;
+        }
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        .btn-tag {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 5px;
+            color: #a0c4ff;
+            background-color: #0b1d3a;
+            border-color: #2c3e70;
+            transition: all 0.3s;
+        }
+        .btn-tag:hover {
+            background-color: #2c3e70;
+            color: #f0f0f0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
 
-    /* ====== Pie ====== */
-    footer{
-        text-align:center;
-        padding:20px;
-        font-size:14px;
-        color:#95a5a6;
-    }
-    footer a{
-        color:#95a5a6;
-        text-decoration:none;
-    }
-    footer a:hover{color:#fff;}
-</style>
+        /* --- Tabla de textos --- */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            color: #00bfff;
+            font-size: 16px;
+        }
+        td:nth-child(2) {
+            color: #c0d0ff;
+        }
+        tr {
+            background-color: #11254d;
+            border-radius: 8px;
+        }
+        tr:hover {
+            background-color: #0f2460;
+        }
+
+        /* --- Acciones dentro de la tabla --- */
+        .action-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .action-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* --- Empty state --- */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #a0c4ff;
+            background-color: #11254d;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .empty-state div {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+        .empty-state h3 {
+            font-size: 24px;
+            color: #00bfff;
+            margin-bottom: 10px;
+        }
+
+        .admin-link {
+            display: block;
+            text-align: center;
+            margin-top: 40px;
+            color: #a0c4ff;
+            text-decoration: none;
+        }
+        .admin-link:hover {
+            color: #00bfff;
+            text-decoration: underline;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+                width: 100%;
+            }
+            tr {
+                margin-bottom: 15px;
+                background-color: #11254d;
+            }
+            td {
+                padding: 10px 0;
+                border-bottom: 1px solid #2c3e70;
+            }
+            td:nth-child(1)::before { content: "Título: "; font-weight: bold; }
+            td:nth-child(2)::before { content: "Fecha: "; font-weight: bold; }
+            td:nth-child(3)::before { content: "Acciones: "; font-weight: bold; display: block; margin-bottom: 5px;}
+            .action-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>📚 Textos Subidos para Análisis</h1>
+        
+        <a href="{% url 'subir_texto' %}" class="btn btn-primary">📤 Subir Nuevo Texto</a>
+        
+        <div class="feature-container">
+            <h2>🚀 Funcionalidades de Autocompletado</h2>
+            <div class="btn-group">
+                <a href="{% url 'autocompletado' %}" class="btn btn-primary">🤖 Ir al Autocompletado</a>
+                <a href="{% url 'entrenar_modelo' %}" class="btn btn-secondary">📊 Entrenar Modelo</a>
+            </div>
+            <p>Prueba el nuevo sistema de predicción de palabras usando n-gramas.</p>
+        </div>
 
-<header>
-    <h1>📚 Textos Subidos para Análisis</h1>
-</header>
-
-<section class="actions">
-    <a href="{% url 'subir_texto' %}" class="upload">📤 Subir Nuevo Texto</a>
-    <a href="{% url 'autocompletado' %}" class="auto">🤖 Autocompletado</a>
-    <a href="{% url 'entrenar_modelo' %}" class="train">📊 Entrenar Modelo</a>
-</section>
-
-<main class="table-wrapper">
-{% if textos %}
-<table>
-    <thead>
-        <tr>
-            <th>Título</th>
-            <th>Fecha de Subida</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for texto in textos %}
-        <tr>
-            <td><strong>{{ texto.titulo }}</strong></td>
-            <td>{{ texto.fecha_subida|date:"d/m/Y H:i" }}</td>
-            <td>
-                <a href="{% url 'analizar_texto' texto.id %}" class="btn-analyze">📊 Analizar</a>
-                <div class="mini-links">
-                    <a href="{% url 'analizar_texto' texto.id %}?n_grama=2">Bigramas</a>
-                    <a href="{% url 'analizar_texto' texto.id %}?n_grama=3">Trigramas</a>
-                    <a href="{% url 'analizar_texto' texto.id %}?n_grama=4">4-gramas</a>
-                    <a href="{% url 'analizar_texto' texto.id %}?n_grama=5">5-gramas</a>
-                </div>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% else %}
-    <div class="empty">
-        <i>📝</i>
-        <h3>No hay textos subidos</h3>
-        <p>Sube tu primer archivo de texto para comenzar el análisis</p>
+        {% if textos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Fecha de Subida</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for texto in textos %}
+                <tr>
+                    <td><strong>{{ texto.titulo }}</strong></td>
+                    <td>{{ texto.fecha_subida|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <div class="action-cell">
+                            <div class="action-group">
+                                <a href="{% url 'analizar_texto' texto.id %}" class="btn btn-primary btn-small">📊 Analizar</a>
+                                <a href="{% url 'comparar_probabilidades' texto.id %}" class="btn btn-secondary btn-small">🔍 Comparar MLE</a>
+                            </div>
+                            <div class="action-group">
+                                <a href="{% url 'analizar_texto' texto.id %}?n_grama=2" class="btn btn-secondary btn-tag">Bigramas</a>
+                                <a href="{% url 'analizar_texto' texto.id %}?n_grama=3" class="btn btn-secondary btn-tag">Trigramas</a>
+                                <a href="{% url 'analizar_texto' texto.id %}?n_grama=4" class="btn btn-secondary btn-tag">4-gramas</a>
+                                <a href="{% url 'analizar_texto' texto.id %}?n_grama=5" class="btn btn-secondary btn-tag">5-gramas</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <div>📝</div>
+            <h3>No hay textos subidos todavía</h3>
+            <p>Sube tu primer archivo de texto para comenzar el análisis.</p>
+        </div>
+        {% endif %}
+        
+        <a href="/admin/" class="admin-link">Acceder al panel de administración</a>
     </div>
-{% endif %}
-</main>
-
-<footer>
-    <a href="/admin/">Acceder al panel de administración</a>
-</footer>
-
 </body>
 </html>

@@ -3,89 +3,147 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Subir archivo - Sistema de Análisis</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Subir Archivo - Futurista</title>
 <style>
-    body { 
-        font-family: 'Inter', sans-serif; 
-        margin: 0; padding: 20px; 
-        background-color: #0b1d3a;
-        color: #f0f0f0;
-        display: flex; justify-content: center; align-items: center; min-height: 100vh;
-    }
-    .container {
-        width: 100%; max-width: 500px;
-        background: #1e3a5f;
-        padding: 40px 30px;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .container:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 35px rgba(0,0,0,0.6);
-    }
-    h1 {
-        text-align: center; color: #00bfff; margin-bottom: 30px;
-    }
-    .form-group { margin-bottom: 25px; }
-    label {
-        display: block; margin-bottom: 8px; font-weight: 600; color: #f0f0f0;
-    }
-    input[type="text"], input[type="file"] {
-        width: 100%; padding: 14px;
-        border: 2px solid #34495e; border-radius: 8px;
-        font-size: 16px; background: #34495e; color: #f0f0f0;
-        transition: border 0.3s, background 0.3s;
-    }
-    input[type="text"]:focus, input[type="file"]:focus {
-        border-color: #00bfff; outline: none;
-        background: #2c3e5f;
-    }
-    .help-text {
-        font-size: 13px; color: #95a5a6; margin-top: 5px;
-    }
-    button {
-        width: 100%; padding: 16px;
-        background: linear-gradient(90deg, #00bfff, #2ecc71);
-        border: none; border-radius: 8px;
-        font-size: 18px; color: white; font-weight: 600;
-        cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
-    }
-    button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-        background: linear-gradient(90deg, #0095dd, #27ae60);
-    }
-    .back-link {
-        display: block; text-align: center; margin-top: 25px;
-        color: #95a5a6; text-decoration: none;
-        transition: color 0.3s;
-    }
-    .back-link:hover { color: #00bfff; }
+/* --- Reset y fuentes --- */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+body { 
+    background: linear-gradient(135deg, #0b1d3a, #11254d);
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- Contenedor principal --- */
+.container {
+    width: 100%;
+    max-width: 550px;
+    background: rgba(18,37,77,0.95);
+    padding: 35px 40px;
+    border-radius: 16px;
+    border: 2px solid #2c3e70;
+    box-shadow: 0 10px 30px rgba(0,191,255,0.4);
+    backdrop-filter: blur(6px);
+    text-align: center;
+}
+
+/* --- Título --- */
+h1 { 
+    color: #00bfff; 
+    font-size: 2.2em; 
+    margin-bottom: 25px; 
+    text-shadow: 0 0 10px rgba(0,191,255,0.5);
+}
+
+/* --- Formulario --- */
+.form-group { margin-bottom: 22px; text-align: left; }
+
+label { 
+    display: block; 
+    margin-bottom: 8px; 
+    font-weight: bold; 
+    color: #a0c4ff; 
+    font-size: 1em;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 14px;
+    background-color: #0b1d3a;
+    border: 2px solid #2c3e70;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #f0f0f0;
+    transition: all 0.3s;
+}
+input[type="text"]:focus { border-color: #00bfff; outline: none; }
+
+/* --- Input file estilizado --- */
+input[type="file"] {
+    width: 100%;
+    font-size: 16px;
+    color: #a0c4ff;
+}
+input[type="file"]::file-selector-button {
+    padding: 10px 18px;
+    margin-right: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #11254d;
+    color: #00bfff;
+    border: 2px solid #00bfff;
+    transition: all 0.3s;
+}
+input[type="file"]::file-selector-button:hover {
+    background-color: #0f2460;
+}
+
+/* --- Botón de envío --- */
+button[type="submit"] {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(90deg, #00bfff, #3498db);
+    color: #0b1d3a;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s, transform 0.2s;
+    box-shadow: 0 5px 15px rgba(0,191,255,0.3);
+}
+button[type="submit"]:hover {
+    background: linear-gradient(90deg, #0095dd, #0077aa);
+    transform: translateY(-2px);
+}
+
+/* --- Texto de ayuda --- */
+.help-text {
+    font-size: 13px;
+    color: #a0c4ff;
+    margin-top: 6px;
+}
+
+/* --- Link de volver --- */
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #a0c4ff;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.back-link:hover {
+    color: #00bfff;
+    text-decoration: underline;
+}
 </style>
 </head>
 <body>
 <div class="container">
-    <h1>📤 Subir archivo de texto</h1>
-    
+    <h1>📤 Subir Archivo de Texto</h1>
+
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        
         <div class="form-group">
             <label for="id_titulo">Título del texto:</label>
             <input type="text" name="titulo" id="id_titulo" required placeholder="Ej: Análisis de noticias">
-            <div class="help-text">Asigna un nombre descriptivo a tu archivo</div>
+            <div class="help-text">Asigna un nombre descriptivo a tu archivo.</div>
         </div>
         
         <div class="form-group">
             <label for="id_archivo">Seleccionar archivo:</label>
             <input type="file" name="archivo" id="id_archivo" accept=".txt,.text" required>
-            <div class="help-text">Formatos aceptados: .txt (archivos de texto plano)</div>
+            <div class="help-text">Formatos aceptados: .txt (archivos de texto plano).</div>
         </div>
         
-        <button type="submit">🚀 Subir y procesar</button>
+        <button type="submit">🚀 Subir y Procesar</button>
     </form>
-    
+
     <a href="{% url 'lista_textos' %}" class="back-link">← Volver a la lista de textos</a>
 </div>
 </body>

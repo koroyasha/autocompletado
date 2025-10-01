@@ -1,268 +1,270 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modelo {{ n_grama }}-gramas</title>
-<style>
-    /* ==== PALETA (colores idénticos al original) ==== */
-    :root {
-        --azul-fondo: #0b1d3a;
-        --azul-card: #1e3a5f;
-        --azul-oscuro: #34495e;
-        --azul-celeste: #00bfff;
-        --azul-claro: #95a5a6;
-        --azul-hover: #007bbd;
-        --rojo-alerta: #e74c3c;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo Entrenado - Estilo Azul Marino</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* ==== RESET & BASE ==== */
-    *{box-sizing:border-box;margin:0;padding:0;}
-    body {
-        font-family: 'Montserrat', sans-serif;
-        background: var(--azul-fondo);
-        color: #fff;
-        display: flex;
-        min-height: 100vh;
-    }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #0b1d3a;
+            color: #f0f0f0;
+            padding: 40px 20px;
+        }
 
-    /* ==== SIDEBAR ==== */
-    aside {
-        width: 260px;
-        background: var(--azul-card);
-        padding: 2rem 1.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        position: fixed;
-        top: 0; bottom: 0;
-        box-shadow: 4px 0 10px rgba(0,0,0,0.4);
-    }
-    aside h1 {
-        font-size: 1.6rem;
-        text-align: center;
-        color: var(--azul-celeste);
-        margin-bottom: 2rem;
-    }
-    aside nav a {
-        display: block;
-        padding: .75rem 1rem;
-        margin: .25rem 0;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 6px;
-        transition: background .3s;
-    }
-    aside nav a:hover {
-        background: var(--azul-hover);
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1a2a4f;
+            padding: 30px 40px;
+            border-radius: 12px;
+            border: 2px solid #2c3e70;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
 
-    /* ==== MAIN ==== */
-    main {
-        margin-left: 260px;
-        padding: 2rem;
-        width: 100%;
-    }
-    .header-section {
-        margin-bottom: 2rem;
-    }
-    .header-section h2 {
-        color: var(--azul-celeste);
-        font-size: 2rem;
-        margin-bottom: .5rem;
-    }
-    .subtitle {
-        color: var(--azul-claro);
-        font-weight: 300;
-    }
+        h1, h2 {
+            color: #00bfff;
+            text-align: center;
+        }
+        h1 { margin-bottom: 10px; }
+        h2 { margin: 40px 0 20px 0; }
 
-    /* ==== GRID DE CARDS ==== */
-    .grid {
-        display: grid;
-        gap: 1.5rem;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        margin-bottom: 2.5rem;
-    }
-    .card {
-        background: var(--azul-card);
-        border-radius: 10px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-    }
-    .card h3 {
-        color: var(--azul-celeste);
-        margin-bottom: 1rem;
-    }
+        .subtitle {
+            text-align: center;
+            color: #a0c4ff;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
 
-    .stat-number {
-        font-size: 2.8rem;
-        font-weight: bold;
-        text-align: center;
-        margin-top: .5rem;
-    }
+        /* --- Cajas de información --- */
+        .modelo-config, .info-box, .formula {
+            background: #11254d;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #2c3e70;
+        }
+        .modelo-config h3, .info-box h3 {
+            color: #00bfff;
+            margin-bottom: 15px;
+        }
+        .modelo-config p, .info-box p, .info-box li {
+            color: #a0c4ff;
+        }
+        .modelo-config strong, .info-box strong { color: #f0f0f0; }
+        .modelo-config .warning {
+            color: #f0f0f0;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #0d1a3d;
+            border-left: 4px solid #00bfff;
+            border-radius: 4px;
+        }
 
-    /* ==== TABLA ==== */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
-        font-size: .95rem;
-    }
-    th, td {
-        padding: .75rem;
-        border-bottom: 1px solid #222;
-    }
-    th {
-        background: var(--azul-oscuro);
-        text-align: left;
-        color: #fff;
-    }
-    tr:nth-child(even) {background: var(--azul-card);}
-    tr:hover {background: var(--azul-hover);}
+        .formula {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            color: #00bfff;
+            font-size: 1.1em;
+        }
 
-    /* ==== BOTONES ==== */
-    .actions {
-        margin-top: 2rem;
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-    .btn {
-        background: var(--azul-celeste);
-        color: #fff;
-        padding: .75rem 1.25rem;
-        border-radius: 6px;
-        text-decoration: none;
-        transition: background .3s;
-        font-weight: 500;
-    }
-    .btn:hover {background: #0095dd;}
+        .info-box ul {
+            list-style-position: inside;
+            padding-left: 10px;
+        }
 
-    /* ==== INFO BOX ==== */
-    .info {
-        border-left: 4px solid var(--azul-celeste);
-        background: var(--azul-card);
-        padding: 1rem 1.5rem;
-        border-radius: 6px;
-        margin-top: 2rem;
-        line-height: 1.6;
-    }
+        /* --- Tarjeta de estadísticas --- */
+        .stats-card {
+            background: #11254d;
+            border: 1px solid #2c3e70;
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .stats-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #00bfff;
+        }
+        .stats-label { font-size: 1.2em; color: #a0c4ff; }
 
-    /* ==== FORMULA ==== */
-    .formula {
-        background: var(--azul-card);
-        border-radius: 6px;
-        padding: 1rem;
-        margin: 2rem 0;
-        font-family: 'Cambria Math', serif;
-        text-align: center;
-    }
+        /* --- Tabla --- */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            margin-top: 20px;
+        }
+        th, td { padding: 12px 15px; text-align: left; }
+        th { color: #00bfff; font-size: 16px; }
+        td:nth-child(1) { color: #00bfff; font-weight: bold; text-align: center; }
+        td:nth-child(6) { color: #a0c4ff; text-align: center; }
+        tr { background-color: #11254d; border-radius: 8px; }
+        tr:hover { background-color: #0f2460; }
 
-    .empty {
-        text-align: center;
-        padding: 3rem 1rem;
-        color: var(--azul-claro);
-    }
-</style>
+        /* --- Botones --- */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary { color: #0b1d3a; background-color: #00bfff; }
+        .btn-primary:hover { background-color: #0095dd; }
+        .btn-secondary { background-color: transparent; color: #00bfff; border-color: #00bfff; }
+        .btn-secondary:hover { background-color: #0f2460; }
+
+        /* --- Empty state --- */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #a0c4ff;
+            background-color: #11254d;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .empty-state div { font-size: 50px; margin-bottom: 15px; }
+        .empty-state h3 { font-size: 24px; color: #00bfff; margin-bottom: 10px; }
+
+        /* --- Ejemplo práctico --- */
+        .example-box {
+            background: #0b1d3a;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #2c3e70;
+        }
+        code {
+            background-color: #0d1a3d;
+            color: #f0f0f0;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr { display: block; width: 100%; }
+            tr { margin-bottom: 15px; }
+            td { padding: 10px 0; border-bottom: 1px solid #2c3e70; }
+            td:nth-child(1)::before { content: "#: "; font-weight: bold; }
+            td:nth-child(2)::before { content: "N-grama: "; font-weight: bold; }
+            td:nth-child(3)::before { content: "Contexto: "; font-weight: bold; }
+            td:nth-child(4)::before { content: "Palabra Obj.: "; font-weight: bold; }
+            td:nth-child(5)::before { content: "Frec.: "; font-weight: bold; }
+            td:nth-child(6)::before { content: "Probabilidad: "; font-weight: bold; display: block; margin-bottom: 5px; }
+        }
+    </style>
 </head>
 <body>
-<aside>
-    <div>
-        <h1>Modelo {{ n_grama }}-gramas</h1>
-        <nav>
-            <a href="{% url 'autocompletado' %}">🤖 Probar Autocompletado</a>
-            <a href="{% url 'entrenar_modelo' %}">🔄 Nuevo Entrenamiento</a>
-            <a href="{% url 'lista_textos' %}">← Lista de Textos</a>
-        </nav>
-    </div>
-    <small style="color:var(--azul-claro);text-align:center;">Sistema de Análisis</small>
-</aside>
+    <div class="container">
+        <h1>🎯 Modelo de {{ n_grama }}-gramas Entrenado</h1>
+        <div class="subtitle">{{ texto.titulo }}</div>
 
-<main>
-    <section class="header-section">
-        <h2>Configuración del Modelo</h2>
-        <p class="subtitle">{{ texto.titulo }}</p>
-    </section>
-
-    <div class="grid">
-        <div class="card">
-            <h3>Parámetros</h3>
+        <div class="modelo-config">
+            <h3>⚙️ Configuración del Modelo</h3>
             <p><strong>Corpus:</strong> {{ texto.titulo }}</p>
-            <p><strong>Orden:</strong> {{ n_grama }}-gramas</p>
+            <p><strong>Orden del n-grama:</strong> {{ n_grama }}-gramas</p>
             <p><strong>Fronteras de oración:</strong> {% if usar_fronteras %}Sí{% else %}No{% endif %}</p>
-            <p><strong>Total palabras:</strong> {{ palabras_limpias|length }}</p>
-            <p><strong>{{ n_grama }}-gramas únicos:</strong> {{ total_ngramas }}</p>
+            <p><strong>Total de palabras procesadas:</strong> {{ palabras_limpias|length }}</p>
+            <p><strong>Total de {{ n_grama }}-gramas únicos:</strong> {{ total_ngramas }}</p>
             {% if palabras_limpias|length < n_grama %}
-            <p style="color: var(--rojo-alerta);font-weight:bold;">
-                ⚠️ Texto demasiado corto para este orden
-            </p>
+            <p class="warning">⚠️ <strong>Advertencia:</strong> El texto es muy corto para {{ n_grama }}-gramas efectivos.</p>
             {% endif %}
         </div>
 
-        <div class="card">
-            <h3>Total de {{ n_grama }}-gramas</h3>
-            <div class="stat-number">{{ total_ngramas }}</div>
+        <div class="stats-card">
+            <div class="stats-number">{{ total_ngramas }}</div>
+            <div class="stats-label">{{ n_grama }}-gramas únicos encontrados</div>
         </div>
 
-        <div class="card">
-            <h3>Detalles</h3>
-            <p>• Predice usando {{ n_grama|add:"-1" }} palabra(s) de contexto.</p>
-            <p>• Probabilidades por MLE.</p>
-            <p>• Listo para autocompletado.</p>
+        <div class="info-box">
+            <strong>📈 Estadísticas del Modelo:</strong>
+            <ul>
+                <li>El modelo puede predecir palabras basándose en {{ n_grama|add:"-1" }} palabra(s) de contexto.</li>
+                <li>Se calcularon probabilidades usando Maximum Likelihood Estimation (MLE).</li>
+                <li>Listo para usar en el sistema de autocompletado.</li>
+            </ul>
         </div>
-    </div>
 
-    <div class="formula">
-        P(w<sub>i</sub>|w<sub>i-{{ n_grama|add:"-1" }}</sub><sup>i-1</sup>) =
-        C(w<sub>i-{{ n_grama|add:"-1" }}</sub><sup>i</sup>) /
-        C(w<sub>i-{{ n_grama|add:"-1" }}</sub><sup>i-1</sup>)
-    </div>
+        <div class="formula">Fórmula MLE: P(wᵢ|wᵢ₋ₙ₊₁...wᵢ₋₁) = C(wᵢ₋ₙ₊₁...wᵢ) / C(wᵢ₋ₙ₊₁...wᵢ₋₁)</div>
 
-    <h2>Top 20 {{ n_grama }}-gramas por frecuencia</h2>
+        <h2>📊 Top 20 {{ n_grama }}-gramas por Frecuencia</h2>
 
-    {% if ngramas_probabilidades %}
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>{{ n_grama }}-grama completo</th>
-                <th>Contexto</th>
-                <th>Objetivo</th>
-                <th>Frecuencia</th>
-                <th>Probabilidad</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ngrama, datos in ngramas_probabilidades %}
-            <tr>
-                <td style="text-align:center;font-weight:bold;">{{ forloop.counter }}</td>
-                <td><strong>{{ ngrama }}</strong></td>
-                <td>{{ datos.contexto }}</td>
-                <td>{{ datos.palabra_objetivo }}</td>
-                <td>{{ datos.frecuencia_ngrama }}</td>
-                <td>{{ datos.probabilidad|floatformat:4 }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <p style="color:var(--azul-claro);margin-top:.5rem;">
-        Mostrando los 20 más frecuentes de {{ total_ngramas }} totales.
-    </p>
-    {% else %}
-    <div class="empty">
-        <h3>📝 No se encontraron n-gramas</h3>
-        <p>El texto no tiene suficientes palabras para generar {{ n_grama }}-gramas.</p>
-    </div>
-    {% endif %}
+        {% if ngramas_probabilidades %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>N-grama</th>
+                    <th>Contexto</th>
+                    <th>Palabra Obj.</th>
+                    <th>Frec.</th>
+                    <th>Probabilidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ngrama, datos in ngramas_probabilidades %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><strong>{{ ngrama }}</strong></td>
+                    <td>{{ datos.contexto }}</td>
+                    <td>{{ datos.palabra_objetivo }}</td>
+                    <td>{{ datos.frecuencia_ngrama }}</td>
+                    <td>{{ datos.probabilidad|floatformat:4 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div style="margin-top: 20px; text-align: center;">
+            <small>Mostrando los 20 {{ n_grama }}-gramas más frecuentes de un total de {{ total_ngramas }}.</small>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div>📝</div>
+            <h3>No se encontraron n-gramas</h3>
+            <p>El texto no tiene suficientes palabras para generar {{ n_grama }}-gramas.</p>
+            <p>Intenta con un texto más largo o un orden de n-grama menor.</p>
+        </div>
+        {% endif %}
 
-    {% if ngramas_probabilidades %}
-    <div class="info">
-        <h3>Ejemplo de Predicción</h3>
-        <p>Si escribes: <code>{{ ngramas_probabilidades.0.1.contexto }}</code></p>
-        <p>Sugerencia: <strong>{{ ngramas_probabilidades.0.1.palabra_objetivo }}</strong></p>
-        <p>Probabilidad: <strong>{{ ngramas_probabilidades.0.1.probabilidad|floatformat:4 }}</strong></p>
+        <div class="btn-container">
+            <a href="{% url 'autocompletado' %}" class="btn btn-primary">🤖 Probar Autocompletado</a>
+            <a href="{% url 'entrenar_modelo' %}" class="btn btn-secondary">🔄 Entrenar Otro</a>
+            <a href="{% url 'lista_textos' %}" class="btn btn-secondary">← Volver a la Lista</a>
+        </div>
+
+        {% if ngramas_probabilidades %}
+        <div class="info-box" style="margin-top: 30px;">
+            <h3>💡 Ejemplo Práctico de Uso</h3>
+            <p>Con este modelo de {{ n_grama }}-gramas, puedes predecir la palabra siguiente basándote en un contexto de {{ n_grama|add:"-1" }} palabra(s).</p>
+            <div class="example-box">
+                <h4>Ejemplo:</h4>
+                <p>Si escribes: <code>"{{ ngramas_probabilidades.0.1.contexto }}"</code></p>
+                <p>El modelo sugerirá: <strong style="color: #00bfff;">"{{ ngramas_probabilidades.0.1.palabra_objetivo }}"</strong></p>
+                <p>Con una probabilidad de: <strong>{{ ngramas_probabilidades.0.1.probabilidad|floatformat:4 }}</strong></p>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-</main>
 </body>
 </html>

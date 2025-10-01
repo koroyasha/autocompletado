@@ -1,277 +1,425 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Autocompletado N-gramas</title>
-<style>
-/* ===== RESET Y BASE ===== */
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-    font-family: 'Arial', sans-serif;
-    background:#0b1d3a;
-    color:#fff;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocompletado con N-gramas - Estilo Neón</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* ===== CABECERA ===== */
-header{
-    background:#1e3a5f;
-    padding:20px 40px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:4px solid #00bfff;
-    position:sticky;
-    top:0;
-}
-header h1{
-    font-size:1.8rem;
-    color:#00bfff;
-}
-header nav a{
-    margin-left:20px;
-    color:#95a5a6;
-    text-decoration:none;
-    font-weight:bold;
-}
-header nav a:hover{
-    color:#00bfff;
-}
+        body { 
+            font-family: 'Segoe UI', 'Roboto', sans-serif; 
+            margin: 0;
+            padding: 40px 20px;
+            /* Fondo con gradiente radial para dar profundidad */
+            background: radial-gradient(ellipse at center, #1a2a4f 0%, #0b1d3a 100%);
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-/* ===== CONTENIDO PRINCIPAL ===== */
-main{
-    flex:1;
-    padding:40px;
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap:40px;
-}
-@media(max-width:900px){
-    main{grid-template-columns:1fr;}
-}
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            /* Fondo con gradiente sutil y borde semitransparente */
+            background: rgba(17, 37, 77, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 30px 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(44, 62, 112, 0.5);
+            /* Sombra con brillo azul para un efecto "neón" */
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 191, 255, 0.1);
+        }
 
-/* Tarjeta */
-.card{
-    background:#11254d;
-    border-radius:12px;
-    padding:25px;
-    box-shadow:0 4px 10px rgba(0,0,0,.5);
-    border-left:6px solid #00bfff;
-}
-.card h2{
-    color:#00bfff;
-    margin-bottom:20px;
-    font-size:1.4rem;
-}
+        h1 {
+            color: #ffffff; /* Blanco brillante para el título */
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 32px;
+            font-family: 'Bahnschrift', 'Roboto Condensed', sans-serif;
+            font-weight: 600;
+            /* Sombra de texto para hacerlo resaltar */
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.7);
+        }
 
-/* Formularios */
-.form-group{
-    margin-bottom:20px;
-}
-label{
-    font-weight:bold;
-    display:block;
-    margin-bottom:6px;
-    color:#00bfff;
-}
-input[type="text"],
-input[type="number"],
-select{
-    width:100%;
-    padding:12px;
-    background:#1e3a5f;
-    border:2px solid #0b1d3a;
-    border-radius:6px;
-    color:#fff;
-    font-size:16px;
-}
-input:focus, select:focus{
-    border-color:#00bfff;
-    outline:none;
-}
-.checkbox-line{
-    display:flex;
-    align-items:center;
-    margin-top:10px;
-}
-.checkbox-line input{margin-right:10px;}
+        .form-group {
+            margin-bottom: 22px;
+        }
 
-button{
-    width:100%;
-    padding:12px;
-    background:#00bfff;
-    border:none;
-    border-radius:6px;
-    color:#fff;
-    font-size:16px;
-    cursor:pointer;
-    transition:.3s;
-}
-button:hover{background:#0095dd;}
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #a0c4ff; /* Azul claro */
+            /* Pequeños detalles tipográficos */
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85em;
+        }
 
-/* Sugerencias */
-#resultados{
-    margin-top:20px;
-}
-.sugerencia{
-    background:#1e3a5f;
-    margin:12px 0;
-    padding:12px;
-    border-radius:6px;
-    position:relative;
-}
-.sugerencia strong{color:#00bfff;}
-.sugerencia-principal{
-    border-left:4px solid #27ae60;
-    padding-left:10px;
-    font-weight:bold;
-}
-.probabilidad{
-    position:absolute;
-    top:12px;
-    right:12px;
-    font-size:0.9em;
-    color:#95a5a6;
-}
-.loading, .error{
-    padding:15px;
-    border-radius:6px;
-    margin-top:10px;
-    text-align:center;
-}
-.loading{color:#95a5a6;}
-.error{background:#fadbd8;color:#e74c3c;}
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(11, 29, 58, 0.7);
+            border: 1px solid #2c3e70;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #f0f0f0;
+            transition: all 0.3s ease;
+        }
 
-/* Footer */
-footer{
-    background:#1e3a5f;
-    text-align:center;
-    padding:20px;
-    font-size:0.9rem;
-    color:#95a5a6;
-}
-</style>
+        select:focus, input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #00bfff;
+            /* Sombra interior al enfocar */
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.25);
+        }
+
+        small {
+            color: #a0c4ff;
+            opacity: 0.8;
+            display: block;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: rgba(11, 29, 58, 0.7);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .checkbox-group label {
+            margin-bottom: 0;
+            margin-left: 10px;
+            font-weight: normal;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 1em;
+        }
+
+        .checkbox-group input {
+            accent-color: #00bfff;
+            width: 18px;
+            height: 18px;
+        }
+
+        button[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 14px 25px;
+            /* Gradiente más vibrante para el botón principal */
+            background: linear-gradient(45deg, #00bfff, #1e90ff);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.2);
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4);
+        }
+
+        .resultados {
+            margin-top: 30px;
+            padding: 20px;
+            background: #0d1a3d;
+            border-radius: 8px;
+            border-top: 2px solid #00bfff;
+        }
+        
+        .resultados h3 {
+            color: #00bfff;
+            margin-bottom: 15px;
+        }
+
+        .sugerencia {
+            padding: 12px 15px;
+            margin: 10px 0;
+            background: rgba(17, 37, 77, 0.9);
+            border-radius: 8px;
+            border-left: 3px solid #2c3e70;
+            transition: all 0.3s ease;
+        }
+
+        .sugerencia:hover {
+            background-color: #1a2a4f;
+            border-left-color: #00bfff;
+            transform: translateX(5px);
+        }
+
+        .sugerencia-principal {
+            font-weight: bold;
+            background: #1a2a4f;
+            border-left: 3px solid #00bfff;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.15);
+        }
+
+        .probabilidad {
+            float: right;
+            color: #a0c4ff;
+            font-size: 0.9em;
+        }
+
+        .loading, .error {
+            text-align: center;
+            padding: 20px;
+            color: #a0c4ff;
+            background-color: #11254d;
+            border-radius: 8px;
+        }
+
+        .error {
+            color: #f0f0f0;
+            border: 1px solid #3498db;
+        }
+        
+        .info-box {
+            background: rgba(17, 37, 77, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 3px solid #00bfff;
+            color: #a0c4ff;
+        }
+
+        .info-box strong {
+            color: #ffffff;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #2c3e70;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            color: #ffffff;
+            background: linear-gradient(45deg, #00bfff, #1e90ff);
+            box-shadow: 0 2px 10px rgba(30, 144, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+             box-shadow: 0 4px 15px rgba(30, 144, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: #00bfff;
+            border: 2px solid #00bfff;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(0, 191, 255, 0.1);
+        }
+
+    </style>
 </head>
 <body>
-<header>
-    <h1>🤖 Autocompletado N-gramas</h1>
-    <nav>
-        <a href="{% url 'entrenar_modelo' %}">Entrenar Modelo</a>
-        <a href="{% url 'lista_textos' %}">Lista de Textos</a>
-    </nav>
-</header>
-
-<main>
-    <!-- Columna 1 -->
-    <section class="card">
-        <h2>Configuración</h2>
+    <div class="container">
+        <h1>🤖 Autocompletado con N-gramas</h1>
+        
+        <div class="info-box">
+            <strong>💡 ¿Cómo funciona?</strong><br>
+            Escribe un texto y el sistema te sugerirá la siguiente palabra más probable basándose en el modelo de n-gramas entrenado con el corpus seleccionado.
+        </div>
+        
         <form id="autocompletadoForm">
             <div class="form-group">
-                <label for="texto_id">Corpus</label>
-                <select id="texto_id" required>
+                <label for="texto_id">Seleccionar corpus:</label>
+                <select name="texto_id" id="texto_id" required>
                     <option value="">-- Selecciona un texto --</option>
                     {% for texto in textos %}
                     <option value="{{ texto.id }}">{{ texto.titulo }}</option>
                     {% endfor %}
                 </select>
             </div>
-
-            <div class="form-group">
-                <label for="n_grama">Orden del n-grama</label>
-                <input type="number" id="n_grama" min="2" max="20" value="3">
+            
+           <div class="form-group">
+                <label for="n_grama">Orden del n-grama (n):</label>
+                <input type="number" name="n_grama" id="n_grama" 
+                    min="2" max="20" value="3" required>
+                <small>
+                    Número de palabras en la secuencia (2=bigramas, 3=trigramas, etc.)
+                </small>
             </div>
 
             <div class="form-group">
-                <label for="max_sugerencias">Máx. sugerencias</label>
-                <input type="number" id="max_sugerencias" min="1" max="20" value="5">
+                <label for="max_sugerencias">Número máximo de sugerencias:</label>
+                <input type="number" name="max_sugerencias" id="max_sugerencias" 
+                    min="1" max="20" value="5">
+                <small>
+                    Cantidad de sugerencias a mostrar (máximo 20)
+                </small>
             </div>
-
-            <div class="checkbox-line">
-                <input type="checkbox" id="fronteras">
-                <label for="fronteras">Incluir fronteras &lt;s&gt; &lt;/s&gt;</label>
+                        
+            <div class="checkbox-group">
+                <input type="checkbox" name="fronteras" id="fronteras">
+                <label for="fronteras">Incluir fronteras de oración (&lt;s&gt;, &lt;/s&gt;)</label>
             </div>
+            
+            <div class="form-group">
+                <label for="texto_input">Escribe tu texto:</label>
+                <input type="text" name="texto" id="texto_input" 
+                       placeholder="Ejemplo: 'el perro' o 'la doctora julieta'..." required>
+                <small>Escribe al menos una palabra para obtener sugerencias</small>
+            </div>
+            
+            <button type="submit">🚀 Obtener sugerencias</button>
         </form>
-    </section>
-
-    <!-- Columna 2 -->
-    <section class="card">
-        <h2>Texto de Entrada</h2>
-        <div class="form-group">
-            <label for="texto_input">Escribe tu texto</label>
-            <input type="text" id="texto_input" placeholder="Ejemplo: 'el perro'..." required>
+        
+        <div id="resultados" class="resultados" style="display: none;">
+            <h3>Sugerencias para: "<span id="contexto"></span>"</h3>
+            <div id="sugerencias-container"></div>
         </div>
-        <button id="btn-sugerir">🚀 Obtener sugerencias</button>
+        
+        <div class="btn-container">
+            <a href="{% url 'entrenar_modelo' %}" class="btn btn-primary">📊 Entrenar y visualizar</a>
+            <a href="{% url 'lista_textos' %}" class="btn btn-secondary">← Volver a la lista</a>
+        </div>
+    </div>
 
-        <div id="resultados"></div>
-    </section>
-</main>
-
-<footer>
-    &copy; 2025 Autocompletado con N-gramas
-</footer>
-
-<script>
-document.getElementById('btn-sugerir').addEventListener('click', function(){
-    const texto   = document.getElementById('texto_input').value.trim();
-    const textoId = document.getElementById('texto_id').value;
-    const nGrama  = document.getElementById('n_grama').value;
-    const maxSug  = document.getElementById('max_sugerencias').value;
-    const fronteras = document.getElementById('fronteras').checked;
-
-    if(!textoId){alert('Selecciona un corpus');return;}
-    if(!texto){alert('Escribe algún texto');return;}
-
-    const cont = document.getElementById('resultados');
-    cont.innerHTML='<div class="loading">⏳ Calculando sugerencias...</div>';
-
-    fetch('{% url "obtener_sugerencias" %}',{
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json',
-            'X-CSRFToken':getCookie('csrftoken')
-        },
-        body:JSON.stringify({
-            texto:texto,
-            texto_id:textoId,
-            n_grama:nGrama,
-            max_sugerencias:maxSug,
-            fronteras:fronteras
-        })
-    })
-    .then(r=>r.ok?r.json():Promise.reject('Error de servidor'))
-    .then(data=>{
-        if(data.error){
-            cont.innerHTML='<div class="error">❌ '+data.error+'</div>';return;
-        }
-        if(data.sugerencias.length===0){
-            cont.innerHTML='<div class="sugerencia">Sin sugerencias.</div>';return;
-        }
-        let html=`<h3>Sugerencias para: "${data.contexto}"</h3>`;
-        data.sugerencias.forEach((s,i)=>{
-            const pct=(s.probabilidad*100).toFixed(2);
-            html+=`
-            <div class="sugerencia ${i===0?'sugerencia-principal':''}">
-                <strong>${s.palabra}</strong>
-                <span class="probabilidad">${pct}%</span>
-                <br><small style="color:#95a5a6;">N-grama: ${s.ngrama_completo}</small>
-            </div>`;
+    <script>
+        document.getElementById('autocompletadoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const texto = document.getElementById('texto_input').value;
+            const textoId = document.getElementById('texto_id').value;
+            const nGrama = document.getElementById('n_grama').value;
+            const fronteras = document.getElementById('fronteras').checked;
+            
+            if (!textoId) {
+                alert('Por favor selecciona un corpus');
+                return;
+            }
+            
+            if (!texto.trim()) {
+                alert('Por favor escribe algún texto');
+                return;
+            }
+            
+            // Mostrar loading
+            document.getElementById('resultados').style.display = 'block';
+            document.getElementById('sugerencias-container').innerHTML = 
+                '<div class="loading">⏳ Calculando sugerencias...</div>';
+            
+            // Realizar petición AJAX
+            fetch('{% url "obtener_sugerencias" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                texto: texto,
+                texto_id: textoId,
+                n_grama: nGrama,
+                max_sugerencias: document.getElementById('max_sugerencias').value,
+                fronteras: fronteras
+            })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('sugerencias-container').innerHTML = 
+                        `<div class="error">❌ Error: ${data.error}</div>`;
+                    return;
+                }
+                
+                document.getElementById('contexto').textContent = data.contexto;
+                
+                if (data.sugerencias.length === 0) {
+                    document.getElementById('sugerencias-container').innerHTML = 
+                        '<div class="sugerencia">No se encontraron sugerencias para este contexto. Intenta con más texto o un corpus diferente.</div>';
+                    return;
+                }
+                
+                let html = '';
+                data.sugerencias.forEach((sugerencia, index) => {
+                    const esPrincipal = index === 0;
+                    const probPorcentaje = (sugerencia.probabilidad * 100).toFixed(2);
+                    
+                    html += `
+                        <div class="sugerencia ${esPrincipal ? 'sugerencia-principal' : ''}">
+                            <strong>${sugerencia.palabra}</strong>
+                            <span class="probabilidad">${probPorcentaje}% (Freq: ${sugerencia.frecuencia_ngrama}/${sugerencia.frecuencia_contexto})</span>
+                            ${esPrincipal ? '<br><small style="color: #00bfff; opacity: 1; font-style: normal;">✨ Sugerencia principal</small>' : ''}
+                            <br><small>N-grama: ${sugerencia.ngrama_completo}</small>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('sugerencias-container').innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('sugerencias-container').innerHTML = 
+                    `<div class="error">❌ Error: ${error.message}</div>`;
+            });
         });
-        cont.innerHTML=html;
-    })
-    .catch(err=>cont.innerHTML='<div class="error">❌ '+err+'</div>');
-});
-
-function getCookie(name){
-    let value=null;
-    document.cookie.split(';').forEach(c=>{
-        c=c.trim();
-        if(c.startsWith(name+'=')) value=decodeURIComponent(c.split('=')[1]);
-    });
-    return value;
-}
-</script>
+        
+        // Función para obtener el token CSRF
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Ejemplo automático al cargar la página (opcional)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Puedes pre-seleccionar el primer texto si hay alguno
+            const select = document.getElementById('texto_id');
+            if (select.options.length > 1) {
+                select.selectedIndex = 1; // Selecciona el primer texto (no la opción vacía)
+            }
+        });
+    </script>
 </body>
 </html>

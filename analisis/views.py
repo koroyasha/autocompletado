@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .forms import TextoAnalizadoForm
 from .models import TextoAnalizado
-from .utils import procesar_texto_completo, limpiar_texto, calcular_probabilidad_ngramas # Cambiar a procesar_texto_completo
+from .utils import procesar_texto_completo, limpiar_texto, limpiar_texto_con_fronteras, calcular_probabilidad_ngramas
 
 def subir_texto(request):
     if request.method == 'POST':
@@ -28,7 +28,7 @@ def analizar_texto(request, texto_id, n_grama=1):
             n_grama = int(request.GET.get('n_grama', 1))
             if n_grama < 1:
                 n_grama = 1
-            elif n_grama > 100:  # Aumentar el límite máximo
+            elif n_grama > 100:
                 n_grama = 100
         except (ValueError, TypeError):
             n_grama = 1
@@ -36,8 +36,8 @@ def analizar_texto(request, texto_id, n_grama=1):
     # Verificar si se solicitan fronteras de oración
     usar_fronteras = request.GET.get('fronteras', 'false').lower() == 'true'
     
-    # Obtener n-gramas para comparación (pueden ser configurados)
-    n_gramas_comparacion = [2, 3, 4, 5, 6]  # Puede extenderse según necesidades
+    # Obtener n-gramas para comparación
+    n_gramas_comparacion = [2, 3, 4, 5, 6]
     
     texto_obj = get_object_or_404(TextoAnalizado, id=texto_id)
     
@@ -48,7 +48,7 @@ def analizar_texto(request, texto_id, n_grama=1):
     except:
         contenido = ""
     
-    # Procesar el texto con la nueva función que soporta cualquier n-grama
+    # Procesar el texto
     resultado = procesar_texto_completo(contenido, n_grama, usar_fronteras, n_gramas_comparacion)
     
     # Guardar el contenido original y procesado en la sesión
@@ -108,9 +108,9 @@ def ver_procesamiento(request, texto_id):
         'total_palabras_limpias': len(palabras_limpias),
         'stopwords_eliminadas': stopwords_eliminadas,
         'simbolos_eliminados': ', '.join(simbolos_eliminados) if simbolos_eliminados else 'Ninguno',
-        'palabras_con_acentos': palabras_con_acentos[:20]  # Mostrar hasta 20 palabras con acentos
+        'palabras_con_acentos': palabras_con_acentos[:20]
     })
-  
+
 def autocompletado_view(request):
     """Vista principal para el autocompletado"""
     textos = TextoAnalizado.objects.all().order_by('-fecha_subida')
@@ -125,14 +125,14 @@ def obtener_sugerencias(request):
             data = json.loads(request.body)
             texto_parcial = data.get('texto', '').strip().lower()
             texto_id = data.get('texto_id')
-            n_grama = int(data.get('n_grama', 3))  # Valor por defecto 3
-            max_sugerencias = int(data.get('max_sugerencias', 5))  # Nuevo parámetro
+            n_grama = int(data.get('n_grama', 3))
+            max_sugerencias = int(data.get('max_sugerencias', 5))
             usar_fronteras = data.get('fronteras', False)
             
             # Validar n_grama
             if n_grama < 2:
                 n_grama = 2
-            elif n_grama > 20:  # Límite máximo razonable
+            elif n_grama > 20:
                 n_grama = 20
                 
             # Validar max_sugerencias
@@ -158,7 +158,7 @@ def obtener_sugerencias(request):
             resultado = procesar_texto_completo(contenido, n_grama, usar_fronteras)
             palabras_limpias = resultado['palabras_limpias']
             
-            # Verificar si hay suficientes palabras para el n-grama solicitado
+            # Verificar si hay suficientes palabras
             if len(palabras_limpias) < n_grama:
                 return JsonResponse({
                     'error': f'El texto no tiene suficientes palabras para {n_grama}-gramas. Solo tiene {len(palabras_limpias)} palabras.'
@@ -190,7 +190,7 @@ def obtener_sugerencias(request):
                         'ngrama_completo': ngrama
                     })
             
-            # Ordenar por probabilidad descendente (y luego por frecuencia)
+            # Ordenar por probabilidad descendente
             sugerencias.sort(key=lambda x: (x['probabilidad'], x['frecuencia_ngrama']), reverse=True)
             
             # Limitar a las mejores sugerencias
@@ -213,7 +213,7 @@ def entrenar_modelo(request):
     """Vista para entrenar y visualizar el modelo de n-gramas"""
     if request.method == 'POST':
         texto_id = request.POST.get('texto_id')
-        n_grama = int(request.POST.get('n_grama', 3))  # Valor por defecto 3
+        n_grama = int(request.POST.get('n_grama', 3))
         usar_fronteras = request.POST.get('fronteras', False) == 'true'
         
         # Validar n_grama
@@ -250,7 +250,7 @@ def entrenar_modelo(request):
             ngramas_probabilidades.items(), 
             key=lambda x: x[1]['frecuencia_ngrama'], 
             reverse=True
-        )[:50]  # Mostrar hasta 50 n-gramas
+        )[:50]
         
         return render(request, 'modelo_entrenado.html', {
             'texto': texto_obj,
@@ -266,3 +266,87 @@ def entrenar_modelo(request):
     return render(request, 'entrenar_modelo.html', {
         'textos': textos
     })
+
+def vista_comparacion_avanzada(request, texto_id):
+    """Vista principal para comparación MLE - usa parámetros GET"""
+    # Valor por defecto
+    n_grama = 3
+    
+    # Obtener n_grama de parámetros GET
+    if 'n_grama' in request.GET:
+        try:
+            n_grama_param = request.GET.get('n_grama', '3')
+            n_grama = int(n_grama_param)
+            if n_grama < 2:
+                n_grama = 2
+            elif n_grama > 20:
+                n_grama = 20
+        except (ValueError, TypeError):
+            n_grama = 3
+    
+    # Llamar a la función de comparación
+    return comparar_probabilidades(request, texto_id, n_grama)
+
+def comparar_probabilidades(request, texto_id, n_grama=3):
+    """Función helper para comparar probabilidades con/sin fronteras"""
+    # Validar n_grama
+    if n_grama < 2:
+        n_grama = 3
+    elif n_grama > 20:
+        n_grama = 20
+    
+    texto_obj = get_object_or_404(TextoAnalizado, id=texto_id)
+    
+    # Leer contenido
+    try:
+        with texto_obj.archivo.open('r') as archivo:
+            contenido = archivo.read()
+    except Exception as e:
+        return render(request, 'error.html', {
+            'error': f'Error al leer el archivo: {str(e)}',
+            'texto': texto_obj
+        })
+    
+    try:
+        # Procesar SIN fronteras
+        palabras_sin_fronteras = limpiar_texto(contenido, usar_stopwords=True)
+        ngramas_prob_sin = calcular_probabilidad_ngramas(palabras_sin_fronteras, n_grama) if palabras_sin_fronteras else {}
+        
+        # Procesar CON fronteras
+        palabras_con_fronteras = limpiar_texto_con_fronteras(contenido)
+        ngramas_prob_con = calcular_probabilidad_ngramas(palabras_con_fronteras, n_grama) if palabras_con_fronteras else {}
+        
+        # Obtener top n-gramas para comparación
+        top_sin = sorted(ngramas_prob_sin.items(), 
+                        key=lambda x: x[1]['frecuencia_ngrama'], 
+                        reverse=True)[:15] if ngramas_prob_sin else []
+        
+        top_con = sorted(ngramas_prob_con.items(), 
+                        key=lambda x: x[1]['frecuencia_ngrama'], 
+                        reverse=True)[:15] if ngramas_prob_con else []
+        
+        return render(request, 'comparacion.html', {
+            'texto': texto_obj,
+            'n_grama': n_grama,
+            'sin_fronteras': {
+                'palabras': palabras_sin_fronteras,
+                'total_palabras': len(palabras_sin_fronteras),
+                'ngramas_probabilidades': ngramas_prob_sin,
+                'top_ngramas': top_sin,
+                'total_ngramas': len(ngramas_prob_sin)
+            },
+            'con_fronteras': {
+                'palabras': palabras_con_fronteras,
+                'total_palabras': len(palabras_con_fronteras),
+                'ngramas_probabilidades': ngramas_prob_con,
+                'top_ngramas': top_con,
+                'total_ngramas': len(ngramas_prob_con)
+            }
+        })
+    
+    except Exception as e:
+        return render(request, 'error.html', {
+            'error': f'Error en el procesamiento: {str(e)}',
+            'texto': texto_obj,
+            'n_grama': n_grama
+        })
